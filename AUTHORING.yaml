@@ -1,0 +1,82 @@
+version: 1
+approval: CCA requested 2026-10-11; established reading-only scope
+course:
+  id: ATS055
+  certification:
+    name: Cilium Certified Associate
+    code: CCA
+    provider: CNCF / Linux Foundation
+    domain: Network Observability
+    weight: 10
+    competencies:
+    - Understand the Observability Capabilities of Hubble
+    - Enabling Layer 7 Protocol Visibility
+    - Know How to Use Hubble from the Command Line or the Hubble UI
+defaults:
+  playground: false
+  module_lab: false
+  capstone: false
+  section_quiz: false
+  final_quiz: true
+assessment_format: YAML question banks v1, registered in assessments/index.yaml
+sections:
+- id: section-010
+  title: Understand the Observability Capabilities of Hubble
+  curriculum_item: Understand the Observability Capabilities of Hubble
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Flow Evidence, Verdicts And Observation Scope
+    objectives:
+    - Explain the information in supported Hubble flow records.
+    - Distinguish local server scope from Relay aggregation.
+    - Interpret forwarded and dropped verdicts without overclaiming application success.
+    - Account for buffers, filters and absent observations.
+    outline:
+    - Flow Evidence, Verdicts And Observation Scope
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
+      adapted_from: null
+- id: section-020
+  title: Enabling Layer 7 Protocol Visibility
+  curriculum_item: Enabling Layer 7 Protocol Visibility
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Making Application Protocols Visible To Hubble
+    objectives:
+    - Distinguish Layer 3 or 4 observations from Layer 7 context.
+    - Explain visibility-enabling policy and proxy participation.
+    - Account for encrypted payloads and protocol support.
+    - Evaluate observation changes without unintended enforcement.
+    outline:
+    - Making Application Protocols Visible To Hubble
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
+      adapted_from: null
+- id: section-030
+  title: Know How to Use Hubble from the Command Line or the Hubble UI
+  curriculum_item: Know How to Use Hubble from the Command Line or the Hubble UI
+  capstone: false
+  section_quiz: false
+  modules:
+  - id: module-01
+    title: Interpreting Hubble CLI And UI Views
+    objectives:
+    - Choose local or Relay access for the intended scope.
+    - Interpret filters, time selection and request or reply direction.
+    - Use service maps as observed relationships rather than declared completeness.
+    - Distinguish client access failures from traffic failures.
+    outline:
+    - Interpreting Hubble CLI And UI Views
+    playground: false
+    module_lab: false
+    sources:
+    - reading: sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
+      adapted_from: null
