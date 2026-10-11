@@ -1,0 +1,186 @@
+schema_version: 1
+kind: question_bank
+id: ats055-domain-review
+course_id: ATS055
+exam_code: CCA
+status: draft
+provenance: Original practice material; not official examination questions.
+scope:
+  type: domain
+  id: domain-review
+  title: Network Observability
+placement:
+  position: after
+  reading: sections/section-030/module-01/course-02-summary.md
+questions:
+- id: ats055-domain-review-q01
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the information in supported Hubble flow records.
+  source_readings:
+  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
+  prompt: What can a supported flow verdict help establish?
+  options:
+  - id: a
+    text: The publisher of every image.
+    explanation: Artifact verification is unrelated to that verdict.
+  - id: b
+    text: The observed forwarding or policy outcome at that point.
+    explanation: It is scoped network evidence.
+  - id: c
+    text: The correctness of every business transaction.
+    explanation: Application outcomes need separate evidence.
+  correct_option: b
+  explanation: It is scoped network evidence.
+- id: ats055-domain-review-q02
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish local server scope from Relay aggregation.
+  source_readings:
+  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
+  prompt: Why can a local Hubble view miss another node's traffic?
+  options:
+  - id: a
+    text: The server's default observation scope is local.
+    explanation: Relay can aggregate reachable server views.
+  - id: b
+    text: All nodes necessarily share one unlimited local buffer.
+    explanation: Observation storage has scope and limits.
+  - id: c
+    text: Remote traffic cannot exist in Kubernetes.
+    explanation: Cross-node paths are possible.
+  correct_option: a
+  explanation: Relay can aggregate reachable server views.
+- id: ats055-domain-review-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Account for buffers, filters and absent observations.
+  source_readings:
+  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
+  prompt: What can explain no matching flow records?
+  options:
+  - id: a
+    text: Definitive proof that no traffic ever occurred.
+    explanation: Coverage gaps prevent that conclusion.
+  - id: b
+    text: Automatic proof that the application is healthy.
+    explanation: Silence is not an application result.
+  - id: c
+    text: Filters, observation scope, disabled visibility or retention limits.
+    explanation: Absence has multiple possible causes.
+  correct_option: c
+  explanation: Absence has multiple possible causes.
+- id: ats055-domain-review-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish Layer 3 or 4 observations from Layer 7 context.
+  source_readings:
+  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
+  prompt: Which observation is Layer 7 context?
+  options:
+  - id: a
+    text: Only a node's IP address.
+    explanation: That is network address context.
+  - id: b
+    text: An HTTP method or path under supported visibility.
+    explanation: It describes an application protocol operation.
+  - id: c
+    text: Only a destination TCP port.
+    explanation: That is transport context.
+  correct_option: b
+  explanation: It describes an application protocol operation.
+- id: ats055-domain-review-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain visibility-enabling policy and proxy participation.
+  source_readings:
+  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
+  prompt: Why might HTTP details be absent from an encrypted connection?
+  options:
+  - id: a
+    text: The observation point may not have plaintext application context.
+    explanation: Encryption changes protocol visibility.
+  - id: b
+    text: The absence proves the connection never occurred.
+    explanation: Lower-layer observations can still exist.
+  - id: c
+    text: All TLS packets contain plaintext request paths.
+    explanation: TLS protects application payloads.
+  correct_option: a
+  explanation: Encryption changes protocol visibility.
+- id: ats055-domain-review-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Evaluate observation changes without unintended enforcement.
+  source_readings:
+  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
+  prompt: Why review a visibility policy's enforcement behavior?
+  options:
+  - id: a
+    text: Every visibility setting automatically disables all policy.
+    explanation: That is not the enforcement contract.
+  - id: b
+    text: Hubble UI always modifies labels silently.
+    explanation: The UI's presentation does not explain this rule effect.
+  - id: c
+    text: Layer 7 constraints can cause drops under documented semantics.
+    explanation: Observation intent alone does not guarantee observe-only behavior.
+  correct_option: c
+  explanation: Observation intent alone does not guarantee observe-only behavior.
+- id: ats055-domain-review-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose local or Relay access for the intended scope.
+  source_readings:
+  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
+  prompt: Why choose the client endpoint deliberately?
+  options:
+  - id: a
+    text: The endpoint's name grants application permission.
+    explanation: Client access does not authorize business operations.
+  - id: b
+    text: Local server and Relay views have different scopes.
+    explanation: The access target determines available observations.
+  - id: c
+    text: Every UI always contains all clusters forever.
+    explanation: Aggregation and retention are bounded.
+  correct_option: b
+  explanation: The access target determines available observations.
+- id: ats055-domain-review-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret filters, time selection and request or reply direction.
+  source_readings:
+  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
+  prompt: What can an overly narrow filter do?
+  options:
+  - id: a
+    text: Hide relevant observations from the displayed result.
+    explanation: Selection affects the view rather than the underlying event.
+  - id: b
+    text: Prevent every packet from being forwarded.
+    explanation: Client filters are not the forwarding policy.
+  - id: c
+    text: Rewrite all historical addresses.
+    explanation: Display selection does not mutate history.
+  correct_option: a
+  explanation: Selection affects the view rather than the underlying event.
+- id: ats055-domain-review-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Distinguish client access failures from traffic failures.
+  source_readings:
+  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
+  prompt: A client cannot authenticate to Relay. What is established?
+  options:
+  - id: a
+    text: All application connections are down necessarily.
+    explanation: Relay access and forwarding are separate.
+  - id: b
+    text: Every policy is malformed.
+    explanation: Authentication failure does not prove policy defects.
+  - id: c
+    text: The observation access path failed.
+    explanation: Application traffic can still function.
+  correct_option: c
+  explanation: Application traffic can still function.
