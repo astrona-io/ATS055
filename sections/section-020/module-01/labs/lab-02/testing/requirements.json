@@ -1,0 +1,98 @@
+{
+  "context": "kind-astro-ats-055-lab-020-01-02",
+  "resources": [
+    {
+      "kind": "ciliumnetworkpolicy",
+      "name": "allow-shuttle",
+      "namespace": "starfleet",
+      "expected": {
+        "apiVersion": "cilium.io/v2",
+        "kind": "CiliumNetworkPolicy",
+        "metadata": {
+          "name": "allow-shuttle",
+          "namespace": "starfleet"
+        },
+        "spec": {
+          "endpointSelector": {
+            "matchLabels": {
+              "app": "probe"
+            }
+          },
+          "ingress": [
+            {
+              "fromEndpoints": [
+                {
+                  "matchLabels": {
+                    "k8s:io.kubernetes.pod.namespace": "starfleet"
+                  }
+                }
+              ],
+              "toPorts": [
+                {
+                  "ports": [
+                    {
+                      "port": "8080",
+                      "protocol": "TCP"
+                    }
+                  ],
+                  "rules": {
+                    "http": [
+                      {
+                        "method": "GET",
+                        "path": "/public"
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "kind": "configmap",
+      "name": "evidence",
+      "expected": {
+        "metadata": {
+          "name": "evidence"
+        }
+      }
+    }
+  ],
+  "behavior": [
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "shuttle",
+        "--",
+        "python",
+        "-c",
+        "import urllib.request; print(urllib.request.urlopen('http://probe:8080/public',timeout=4).read().decode())"
+      ],
+      "contains": [
+        "probe-ready"
+      ]
+    },
+    {
+      "args": [
+        "kubectl",
+        "-n",
+        "starfleet",
+        "exec",
+        "shuttle",
+        "--",
+        "python",
+        "-c",
+        "import urllib.request; print(urllib.request.urlopen('http://probe:8080/private',timeout=4).read().decode())"
+      ],
+      "denied": true,
+      "failure_markers": [
+        "403"
+      ]
+    }
+  ]
+}

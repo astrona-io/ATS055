@@ -1,0 +1,21 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: allow-shuttle
+  namespace: starfleet
+spec:
+  endpointSelector:
+    matchLabels:
+      app: probe
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        k8s:io.kubernetes.pod.namespace: starfleet
+    toPorts:
+    - ports:
+      - port: '8080'
+        protocol: TCP
+      rules:
+        http:
+        - method: GET
+          path: /public
