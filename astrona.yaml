@@ -1,9 +1,9 @@
-# Reading-only content; YAML knowledge checks have a separate index.
 training:
   id: ATS055
   title: 'CCA: Network Observability'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CCA: Network Observability.
-    Technical content remains draft. No labs or playgrounds.'
+  description: 'Detailed reading material and reusable YAML knowledge checks for CCA:
+    Network Observability. Technical content remains draft. Private playgrounds and
+    draft independent labs are included.'
   certification:
     name: Cilium Certified Associate
     code: CCA
@@ -33,8 +33,9 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Understand the Observability Capabilities of Hubble
-  description: Developed reading and reasoning for Understand the Observability Capabilities of Hubble.
-  draft: true
+  description: Developed reading and reasoning for Understand the Observability Capabilities
+    of Hubble.
+  status: alpha
   content:
   - type: reading
     title: Understand the Observability Capabilities of Hubble
@@ -46,12 +47,33 @@ modules:
     title: Flow Evidence, Verdicts And Observation Scope
     path: sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
   - type: reading
+    title: Find The Flow Observation Components — Task
+    path: sections/section-010/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Find The Flow Observation Components
+    path: sections/section-010/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: cilium-diagnostics
+    task_kind: build
+    learning_goals:
+    - Verify the relay service and ready deployment.
+    tags:
+    - cca
+    - cilium-diagnostics
+  - type: reading
+    title: Find The Flow Observation Components — Solution
+    path: sections/section-010/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Find The Flow Observation Components'
+    path: sections/section-010/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-02-summary.md
+    path: sections/section-010/module-01/course-03-summary.md
 - id: module-020
   title: Enabling Layer 7 Protocol Visibility
   description: Developed reading and reasoning for Enabling Layer 7 Protocol Visibility.
-  draft: true
+  status: alpha
   content:
   - type: reading
     title: Enabling Layer 7 Protocol Visibility
@@ -63,13 +85,52 @@ modules:
     title: Making Application Protocols Visible To Hubble
     path: sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
   - type: reading
+    title: Create L7 Visibility With An HTTP Policy — Task
+    path: sections/section-020/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Create L7 Visibility With An HTTP Policy
+    path: sections/section-020/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-l7-prerequisite
+    task_kind: build
+    learning_goals:
+    - Generate two different HTTP verdicts for L7 observation.
+    tags:
+    - cca
+    - hubble-l7-prerequisite
+  - type: reading
+    title: Create L7 Visibility With An HTTP Policy — Solution
+    path: sections/section-020/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: Record A Real HTTP Flow From Hubble Relay — Task
+    path: sections/section-020/module-01/labs/lab-02/question.md
+  - type: lab
+    title: Record A Real HTTP Flow From Hubble Relay
+    path: sections/section-020/module-01/labs/lab-02
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-http-flow
+    task_kind: build
+    learning_goals:
+    - Observe an HTTP response through Relay and verify it against the live flow window.
+    tags:
+    - cca
+    - hubble-http-flow
+  - type: reading
+    title: Record A Real HTTP Flow From Hubble Relay — Solution
+    path: sections/section-020/module-01/labs/lab-02/solution.md
+  - type: reading
+    title: 'Guided Practice: Create L7 Visibility With An HTTP Policy'
+    path: sections/section-020/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-02-summary.md
+    path: sections/section-020/module-01/course-03-summary.md
 - id: module-030
   title: Know How to Use Hubble from the Command Line or the Hubble UI
-  description: Developed reading and reasoning for Know How to Use Hubble from the Command Line or the
-    Hubble UI.
-  draft: true
+  description: Developed reading and reasoning for Know How to Use Hubble from the
+    Command Line or the Hubble UI.
+  status: alpha
   content:
   - type: reading
     title: Know How to Use Hubble from the Command Line or the Hubble UI
@@ -81,5 +142,26 @@ modules:
     title: Interpreting Hubble CLI And UI Views
     path: sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
   - type: reading
+    title: Discover The Relay Service For Hubble CLI — Task
+    path: sections/section-030/module-01/labs/lab-01/question.md
+  - type: lab
+    title: Discover The Relay Service For Hubble CLI
+    path: sections/section-030/module-01/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: cilium-diagnostics
+    task_kind: build
+    learning_goals:
+    - Verify the relay service and ready deployment.
+    tags:
+    - cca
+    - cilium-diagnostics
+  - type: reading
+    title: Discover The Relay Service For Hubble CLI — Solution
+    path: sections/section-030/module-01/labs/lab-01/solution.md
+  - type: reading
+    title: 'Guided Practice: Discover The Relay Service For Hubble CLI'
+    path: sections/section-030/module-01/course-02-guided-practice.md
+  - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-02-summary.md
+    path: sections/section-030/module-01/course-03-summary.md
