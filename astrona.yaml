@@ -35,7 +35,7 @@ modules:
   title: Understand the Observability Capabilities of Hubble
   description: Developed reading and reasoning for Understand the Observability Capabilities
     of Hubble.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Understand the Observability Capabilities of Hubble
@@ -73,7 +73,7 @@ modules:
 - id: module-020
   title: Enabling Layer 7 Protocol Visibility
   description: Developed reading and reasoning for Enabling Layer 7 Protocol Visibility.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Enabling Layer 7 Protocol Visibility
@@ -130,7 +130,7 @@ modules:
   title: Know How to Use Hubble from the Command Line or the Hubble UI
   description: Developed reading and reasoning for Know How to Use Hubble from the
     Command Line or the Hubble UI.
-  status: alpha
+  maturity: alpha
   content:
   - type: reading
     title: Know How to Use Hubble from the Command Line or the Hubble UI
