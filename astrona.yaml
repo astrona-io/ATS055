@@ -78,8 +78,14 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: Identities And Endpoints In A Flow
+    path: sections/section-010/module-01/course-03-identities-and-endpoints-in-a-flow.md
+  - type: reading
+    title: Hubble Relay Security And TLS
+    path: sections/section-010/module-01/course-04-relay-security-and-tls.md
+  - type: reading
     title: Summary
-    path: sections/section-010/module-01/course-03-summary.md
+    path: sections/section-010/module-01/course-05-summary.md
   - type: reading
     title: Hubble Metrics And Flow Buffer Sizing
     path: sections/section-010/module-02/course.md
@@ -115,8 +121,54 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: Metric Groups And Label Contexts
+    path: sections/section-010/module-02/course-03-metric-groups-and-label-contexts.md
+  - type: reading
+    title: Scrape Hubble Metrics With Prometheus
+    path: sections/section-010/module-02/course-04-scrape-hubble-metrics-with-prometheus.md
+  - type: reading
     title: Summary
-    path: sections/section-010/module-02/course-03-summary.md
+    path: sections/section-010/module-02/course-05-summary.md
+  - type: reading
+    title: Hubble Flow Export
+    path: sections/section-010/module-03/course.md
+  - type: reading
+    title: Why Export Flows
+    path: sections/section-010/module-03/course-01-why-export-flows.md
+  - type: reading
+    title: Static Export Configuration
+    path: sections/section-010/module-03/course-02-static-export-configuration.md
+  - type: reading
+    title: Filters And Field Masks
+    path: sections/section-010/module-03/course-03-filters-and-field-masks.md
+  - type: reading
+    title: Dynamic Export And Rotation
+    path: sections/section-010/module-03/course-04-dynamic-export-and-rotation.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Export Dropped Flows To A File
+    path: sections/section-010/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-export
+    task_kind: build
+    tags:
+    - hubble
+    - export
+    - flow-export
+    - cilium-config
+    learning_goals:
+    - Write flows to a file in the agent pod
+    - Export only the DROPPED verdict
+    - Restart the agents and read the file
+    resources:
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-03/course-05-summary.md
   - type: reading
     title: Question
     path: sections/section-010/capstone/labs/lab-01/question.md
@@ -191,8 +243,14 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: 'HTTP Rule Matching: Method, Path And Headers'
+    path: sections/section-020/module-01/course-03-http-rule-matching-method-path-and-headers.md
+  - type: reading
+    title: Verify HTTP Visibility And Verdicts
+    path: sections/section-020/module-01/course-04-verify-http-visibility-and-verdicts.md
+  - type: reading
     title: Summary
-    path: sections/section-020/module-01/course-03-summary.md
+    path: sections/section-020/module-01/course-05-summary.md
   - type: reading
     title: DNS Visibility And Protocol Limits
     path: sections/section-020/module-02/course.md
@@ -228,8 +286,54 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: FQDN Selectors And Name Patterns
+    path: sections/section-020/module-02/course-03-fqdn-selectors-and-name-patterns.md
+  - type: reading
+    title: DNS Proxy Behaviour And Limits
+    path: sections/section-020/module-02/course-04-dns-proxy-behaviour-and-limits.md
+  - type: reading
     title: Summary
-    path: sections/section-020/module-02/course-03-summary.md
+    path: sections/section-020/module-02/course-05-summary.md
+  - type: reading
+    title: Layer 7 Metrics And Protocol Limits
+    path: sections/section-020/module-03/course.md
+  - type: reading
+    title: What The Proxy Can Parse
+    path: sections/section-020/module-03/course-01-what-the-proxy-can-parse.md
+  - type: reading
+    title: Encrypted Traffic And TLS
+    path: sections/section-020/module-03/course-02-encrypted-traffic-and-tls.md
+  - type: reading
+    title: HTTP And DNS Metrics
+    path: sections/section-020/module-03/course-03-http-and-dns-metrics.md
+  - type: reading
+    title: Proxy Cost And Troubleshooting
+    path: sections/section-020/module-03/course-04-proxy-cost-and-troubleshooting.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Count HTTP Requests With Hubble Metrics
+    path: sections/section-020/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-l7-metrics
+    task_kind: build
+    tags:
+    - hubble
+    - metrics
+    - httpV2
+    - layer7
+    learning_goals:
+    - Enable the httpV2 metric group on port 9965
+    - Restart the agents
+    - Read hubble_http_requests_total
+    resources:
+    - name: Cilium metrics
+      url: https://docs.cilium.io/en/stable/observability/metrics/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-03/course-05-summary.md
   - type: reading
     title: Question
     path: sections/section-020/capstone/labs/lab-01/question.md
@@ -302,8 +406,14 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: Output Formats And jq
+    path: sections/section-030/module-01/course-03-output-formats-and-jq.md
+  - type: reading
+    title: Advanced Flow Filters
+    path: sections/section-030/module-01/course-04-advanced-flow-filters.md
+  - type: reading
     title: Summary
-    path: sections/section-030/module-01/course-03-summary.md
+    path: sections/section-030/module-01/course-05-summary.md
   - type: reading
     title: Using The Hubble UI
     path: sections/section-030/module-02/course.md
@@ -336,8 +446,54 @@ modules:
     - name: Hubble documentation
       url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
+    title: Namespace Filters And Layer 7 In The UI
+    path: sections/section-030/module-02/course-03-namespace-filters-and-layer-7-in-the-ui.md
+  - type: reading
+    title: Troubleshooting The Hubble UI
+    path: sections/section-030/module-02/course-04-troubleshooting-the-hubble-ui.md
+  - type: reading
     title: Summary
-    path: sections/section-030/module-02/course-03-summary.md
+    path: sections/section-030/module-02/course-05-summary.md
+  - type: reading
+    title: Troubleshooting With Hubble
+    path: sections/section-030/module-03/course.md
+  - type: reading
+    title: Start With The Verdict
+    path: sections/section-030/module-03/course-01-start-with-the-verdict.md
+  - type: reading
+    title: Policy Verdicts And Who Decided
+    path: sections/section-030/module-03/course-02-policy-verdicts-and-who-decided.md
+  - type: reading
+    title: DNS And Name Problems
+    path: sections/section-030/module-03/course-03-dns-and-name-problems.md
+  - type: reading
+    title: Hubble Compared With The Agent Monitor
+    path: sections/section-030/module-03/course-04-hubble-compared-with-the-agent-monitor.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-03/labs/lab-01/question.md
+  - type: lab
+    title: Diagnose A Dropped Pod With Hubble
+    path: sections/section-030/module-03/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-troubleshooting
+    task_kind: troubleshooting
+    tags:
+    - hubble
+    - troubleshooting
+    - policy-verdict
+    - drop
+    learning_goals:
+    - Find the drop reason of a pod with hubble observe
+    - Extend the policy narrowly
+    - Confirm a forwarded policy verdict
+    resources:
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-03/course-05-summary.md
   - type: reading
     title: Question
     path: sections/section-030/capstone/labs/lab-01/question.md

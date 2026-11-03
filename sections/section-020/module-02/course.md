@@ -4,7 +4,9 @@ Before a client sends a request to a Service by name, it asks the cluster DNS (D
 
 This module explains how DNS visibility works, what policy it needs and what that policy does to the other egress traffic of the pod. It also states the limits of layer 7 visibility: which traffic stays hidden even with a policy.
 
-The module has two parts. **How DNS Visibility Works** explains the DNS path in Kubernetes, the DNS proxy and the effect of an egress policy. **Write A DNS Rule And Read DNS Flows** builds the rule, reads the DNS flows and tests the limits.
+The module has four parts. The first two are: **How DNS Visibility Works** explains the DNS path in Kubernetes, the DNS proxy and the effect of an egress policy. **Write A DNS Rule And Read DNS Flows** builds the rule, reads the DNS flows and tests the limits.
+
+The other two parts are: **FQDN Selectors And Name Patterns** separates the DNS rule from the `toFQDNs` selector, and **DNS Proxy Behaviour And Limits** explains the FQDN cache, the time to live and what the proxy cannot see.
 
 ## Learning objectives
 
@@ -16,6 +18,8 @@ After this module you can:
 - Read a DNS flow and find the queried name and type.
 - Explain why Hubble shows egress DNS and not ingress DNS for a pod.
 - Name traffic that stays hidden at layer 7, such as HTTPS.
+- Tell a `dns` rule from a `toFQDNs` selector and write a name pattern.
+- Explain the FQDN cache and the traffic the DNS proxy cannot see.
 
 ## Before you start
 

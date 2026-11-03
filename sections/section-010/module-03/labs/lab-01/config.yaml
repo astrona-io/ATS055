@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Export Dropped Flows To A File (LAB). UNTESTED: not run yet.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-055-lab-010-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    networking:
+      disableDefaultCNI: true
+      podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
+bootstrap:
+  init:
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: apply-solution
+    description: Apply the reference solution
+    type: file
+    source: solution/apply.sh
+validation:
+  scripts:
+  - name: export-keys-set
+    description: "cilium-config sets the export file path and an allow list for dropped flows"
+    type: file
+    source: validation/validate-export-keys-set.sh
+    hint: "Keys: hubble-export-file-path and hubble-export-allowlist."
+  - name: export-has-drops
+    description: "The export file in the agent pod contains dropped flows"
+    type: file
+    source: validation/validate-export-has-drops.sh
+    hint: "Restart the DaemonSet after the change and wait for the rollout."
+  - name: export-only-drops
+    description: "The export file holds no forwarded flows"
+    type: file
+    source: validation/validate-export-only-drops.sh
+    hint: "The allow list must name only the DROPPED verdict."
+teardown:
+  keepCluster: false

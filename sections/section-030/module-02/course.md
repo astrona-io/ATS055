@@ -4,7 +4,9 @@ The Hubble UI draws the traffic of a namespace as a service map: boxes for workl
 
 This module explains what the UI is made of, how to reach it, what to check when it does not work and how to read the map and the flows table. The UI shows the same flows as the command-line tool, so the verdicts and the limits you already know apply to it too.
 
-The module has two parts. **Hubble UI Components And Access** explains the pods and the Service behind the UI, how to open it and how to find out why a Service has no working endpoint. **Read The Service Map And The Flows Table** explains the namespace selector, the map, the flows table and how to match what you see to a policy.
+The module has four parts. The first two are: **Hubble UI Components And Access** explains the pods and the Service behind the UI, how to open it and how to find out why a Service has no working endpoint. **Read The Service Map And The Flows Table** explains the namespace selector, the map, the flows table and how to match what you see to a policy.
+
+The other two parts are: **Namespace Filters And Layer 7 In The UI** explains what the UI draws and how to narrow it, and **Troubleshooting The Hubble UI** gives an ordered list of checks from the Service to Relay.
 
 ## Learning objectives
 
@@ -16,6 +18,8 @@ After this module you can:
 - Choose a namespace in the UI and read the service map.
 - Find a dropped connection in the map and open its flows.
 - Explain which things the UI cannot show.
+- Aim the UI at a namespace and read its edges and flows table.
+- Troubleshoot a UI that does not load or shows an empty map in a fixed order.
 
 ## Before you start
 

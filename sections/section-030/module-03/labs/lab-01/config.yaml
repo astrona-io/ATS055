@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Diagnose A Dropped Pod With Hubble (LAB). UNTESTED: not run yet.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-055-lab-030-03
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    networking:
+      disableDefaultCNI: true
+      podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
+bootstrap:
+  init:
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: apply-solution
+    description: Apply the reference solution
+    type: file
+    source: solution/apply.sh
+validation:
+  scripts:
+  - name: cadet-reaches-probe
+    description: "cadet in starfleet reaches the probe and shuttle still does"
+    type: file
+    source: validation/validate-cadet-reaches-probe.sh
+    hint: "Find the drop reason for cadet with hubble observe, then extend probe-ingress."
+  - name: policy-verdict-forwarded
+    description: "Hubble shows a forwarded policy verdict for cadet"
+    type: file
+    source: validation/validate-policy-verdict-forwarded.sh
+    hint: "Use hubble observe --type policy-verdict --from-pod starfleet/cadet after the change."
+  - name: others-still-denied
+    description: "drifter and rogue in outpost are still refused"
+    type: file
+    source: validation/validate-others-still-denied.sh
+    hint: "Allow only the pod labelled app=cadet, not whole namespaces."
+teardown:
+  keepCluster: false

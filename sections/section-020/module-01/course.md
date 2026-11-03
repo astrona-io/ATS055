@@ -4,7 +4,9 @@ Layer 3 and 4 flows show who connected to whom, on which port, and whether the c
 
 This module shows how Cilium gets that view. Cilium sends the traffic of selected pods through the Envoy proxy that runs inside the Cilium agent, and the proxy reports each HTTP request and response to Hubble. The trigger is a `CiliumNetworkPolicy` with an HTTP rule. The same policy that enables the view also restricts the traffic, so you must understand both effects before you apply it.
 
-The module has two parts. **How Layer 7 Visibility Works** explains the layers, the proxy redirect and what it costs. **Write HTTP Rules And Read HTTP Flows** builds an HTTP rule, tests an allowed and a denied request, and reads the HTTP flows and their verdicts.
+The module has four parts. The first two are: **How Layer 7 Visibility Works** explains the layers, the proxy redirect and what it costs. **Write HTTP Rules And Read HTTP Flows** builds an HTTP rule, tests an allowed and a denied request, and reads the HTTP flows and their verdicts.
+
+The other two parts are: **HTTP Rule Matching: Method, Path And Headers** explains each field of an HTTP rule and how the fields combine, and **Verify HTTP Visibility And Verdicts** reads the HTTP flows with the HTTP filters.
 
 ## Learning objectives
 
@@ -16,6 +18,8 @@ After this module you can:
 - Predict what a request that breaks the rule receives.
 - Filter Hubble output for HTTP flows and for HTTP drops.
 - Explain why encrypted HTTPS traffic does not show HTTP fields.
+- Combine method, path and header fields and predict which requests match.
+- Find refused requests by status code in Hubble.
 
 ## Before you start
 

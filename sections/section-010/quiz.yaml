@@ -255,3 +255,125 @@ questions:
     explanation: It is a short text, for example the TCP flags.
   correct_option: a
   explanation: It exists only when the verdict is a drop.
+- id: ats055-010-q11
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain what an identity is
+  source_readings:
+  - sections/section-010/module-01/course-03-identities-and-endpoints-in-a-flow.md
+  prompt: What is a Cilium identity?
+  options:
+  - id: a
+    text: A number that Cilium gives to a set of labels, shared by all pods with the
+      same labels.
+    explanation: Correct. The datapath marks packets with this number and Hubble translates
+      it to names and labels.
+  - id: b
+    text: The IP address of a pod.
+    explanation: Addresses change; the identity is derived from labels.
+  - id: c
+    text: The name of the node that runs the pod.
+    explanation: The node name is a separate field of a flow.
+  - id: d
+    text: A certificate that the pod presents to Relay.
+    explanation: Certificates secure Hubble connections, not endpoint identity.
+  correct_option: a
+  explanation: An identity is a number for a set of labels. It lets a flow name the
+    workload instead of only an address.
+- id: ats055-010-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Describe the TLS defaults of Hubble Relay
+  source_readings:
+  - sections/section-010/module-01/course-04-relay-security-and-tls.md
+  prompt: With the default Helm settings, which Relay connection uses mutual TLS?
+  options:
+  - id: a
+    text: From Relay to the Hubble server of each node on port 4244.
+    explanation: Correct. Hubble server TLS is on by default.
+  - id: b
+    text: From the hubble tool to Relay on port 4245.
+    explanation: TLS for the Relay server side is off by default.
+  - id: c
+    text: From the browser to the Hubble UI.
+    explanation: The UI is reached by port-forward or ingress; it is not a Hubble
+      TLS setting.
+  - id: d
+    text: None of them.
+    explanation: The connection to the node servers uses TLS by default.
+  correct_option: a
+  explanation: The Relay-to-server connection uses mTLS by default; the client-to-Relay
+    side needs hubble.relay.tls.server.enabled.
+- id: ats055-010-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Choose a metric context with a stable series count
+  source_readings:
+  - sections/section-010/module-02/course-03-metric-groups-and-label-contexts.md
+  prompt: Which context option is the safest for a long-lived metric?
+  options:
+  - id: a
+    text: workload-name
+    explanation: Correct. Workload names are stable across pod restarts.
+  - id: b
+    text: pod
+    explanation: Pod names change at every restart and create many series.
+  - id: c
+    text: ip
+    explanation: Addresses change often and create many series.
+  - id: d
+    text: query on every group
+    explanation: The query option exists only for the dns group and adds a series
+      per name.
+  correct_option: a
+  explanation: Stable names such as workload-name keep the number of series small;
+    pod names and addresses do not.
+- id: ats055-010-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain how Prometheus finds Hubble metrics
+  source_readings:
+  - sections/section-010/module-02/course-04-scrape-hubble-metrics-with-prometheus.md
+  prompt: Which Kubernetes object does the Helm chart create so that Prometheus can
+    scrape every agent?
+  options:
+  - id: a
+    text: A headless Service named hubble-metrics, and optionally a ServiceMonitor.
+    explanation: Correct. The headless Service returns the addresses of all agent
+      pods.
+  - id: b
+    text: A Deployment named hubble-prometheus.
+    explanation: The chart creates no such Deployment.
+  - id: c
+    text: A Secret with the metrics values.
+    explanation: Secrets hold certificates, not scrape targets.
+  - id: d
+    text: An Ingress for port 9965.
+    explanation: Metrics stay inside the cluster; no Ingress is created.
+  correct_option: a
+  explanation: The hubble-metrics headless Service and, with the Prometheus Operator,
+    a ServiceMonitor make the agents discoverable.
+- id: ats055-010-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Configure flow export filters
+  source_readings:
+  - sections/section-010/module-03/course-03-filters-and-field-masks.md
+  prompt: An allow filter and a deny filter both match a flow. What does the exporter
+    do?
+  options:
+  - id: a
+    text: It does not write the flow, because the deny filter wins.
+    explanation: Correct.
+  - id: b
+    text: It writes the flow, because the allow filter wins.
+    explanation: A deny filter always wins.
+  - id: c
+    text: It writes the flow twice.
+    explanation: A flow is written at most once.
+  - id: d
+    text: It stops the export.
+    explanation: A conflict between filters does not stop the exporter.
+  correct_option: a
+  explanation: A deny filter wins over an allow filter, so a flow that matches both
+    is not written.

@@ -13,6 +13,9 @@ This section teaches the two ways to read flows. The command-line tool is exact 
 - Find the source, destination and port of dropped traffic and change a policy narrowly.
 - Open the Hubble UI and diagnose a Service without endpoints.
 - Read the service map and the flows table and match them to a policy.
+- Start a diagnosis from the verdict and the drop reason.
+- Use policy verdicts, DNS flows and the agent monitor to find the cause.
+- Process flows with output formats, jq and negated filters.
 
 ---
 
@@ -32,10 +35,17 @@ This section teaches the two ways to read flows. The command-line tool is exact 
     astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-030/module-02/playground
     ```
 
+### 3. Troubleshooting With Hubble
+*   **Module Reader:** **[Module 3: Troubleshooting With Hubble](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-030/module-03/playground` - the same cluster with an extra `cadet` pod that cannot reach the `probe`.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-030/module-03/playground
+    ```
+
 ### Capstone
 *   **Lab:** `sections/section-030/capstone/labs/lab-01` - repair the UI and use the command line and the UI together.
 
 ### Knowledge check
-*   `sections/section-030/quiz.yaml` - ten questions on this section.
+*   `sections/section-030/quiz.yaml` - fifteen questions on this section.
 
 All graded labs are UNTESTED. They passed static checks only.

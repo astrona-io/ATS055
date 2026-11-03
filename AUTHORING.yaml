@@ -21,11 +21,11 @@ defaults:
 assessment_format: YAML question banks v1, registered in assessments/index.yaml
 sections:
 - id: section-010
-  modules: [module-01, module-02]
+  modules: [module-01, module-02, module-03]
 - id: section-020
-  modules: [module-01, module-02]
+  modules: [module-01, module-02, module-03]
 - id: section-030
-  modules: [module-01, module-02]
+  modules: [module-01, module-02, module-03]
 verification:
   static_checks: astrona validate, bash -n and YAML loading
   runtime: not run; all labs and playgrounds are UNTESTED

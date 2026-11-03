@@ -14,6 +14,8 @@ Layer 3 and 4 flows show who connected to whom. This section teaches how to see 
 - Write a DNS rule for UDP and TCP port 53 and read DNS flows.
 - Explain the effect of an egress policy on the other traffic of a pod.
 - Name traffic that stays hidden, such as HTTPS content.
+- Explain what the proxy can parse and what stays hidden in encrypted traffic.
+- Read the HTTP and DNS metrics and name the cost of the proxy.
 
 ---
 
@@ -33,10 +35,17 @@ Layer 3 and 4 flows show who connected to whom. This section teaches how to see 
     astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-020/module-02/playground
     ```
 
+### 3. Layer 7 Metrics And Protocol Limits
+*   **Module Reader:** **[Module 3: Layer 7 Metrics And Protocol Limits](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-020/module-03/playground` - the same cluster with the HTTP rule on `probe-ingress`.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-020/module-03/playground
+    ```
+
 ### Capstone
 *   **Lab:** `sections/section-020/capstone/labs/lab-01` - layer 7 visibility for HTTP and DNS, with the HTTP metric.
 
 ### Knowledge check
-*   `sections/section-020/quiz.yaml` - ten questions on this section.
+*   `sections/section-020/quiz.yaml` - fifteen questions on this section.
 
 All graded labs are UNTESTED. They passed static checks only.

@@ -39,79 +39,102 @@ questions:
     and keeps them in a fixed-size ring buffer in memory.
 - id: ats055-final-q02
   type: single_choice
-  difficulty: intermediate
-  learning_objective: Read the health and fill level of the flow buffer
-  source_readings:
-  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
-  prompt: 'In `hubble status` through Relay, the line `Connected Nodes: 2/3` appears.
-    What does it mean?'
-  options:
-  - id: a
-    text: All three nodes are healthy and one has no flows.
-    explanation: The count is about connections, not about flows.
-  - id: b
-    text: The buffer is 67 percent full.
-    explanation: The fill level is shown in the line `Current/Max Flows`.
-  - id: c
-    text: Relay cannot reach one node, so that node's flows are missing from every
-      list.
-    explanation: Correct. Relay merges only the nodes it is connected to.
-  - id: d
-    text: Hubble is disabled on two nodes.
-    explanation: A disabled node is not the same as a connection that Relay cannot
-      make.
-  correct_option: c
-  explanation: Relay merges only the nodes it is connected to.
-- id: ats055-final-q03
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Tell a forwarded flow from a dropped flow and name the drop
-    reason
+  difficulty: beginner
+  learning_objective: Read the source, destination and verdict of a flow
   source_readings:
   - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
-  prompt: Which command shows only the dropped flows of the last two minutes?
+  prompt: A flow line ends with `to-stack FORWARDED`. What does `FORWARDED` tell you?
   options:
   - id: a
-    text: "`hubble observe --verdict DROPPED --since 2m`"
-    explanation: Correct. The verdict filter selects dropped flows and `--since` limits
-      the time window.
+    text: The server returned a successful HTTP response.
+    explanation: Layer 3 and 4 flows do not carry HTTP status codes.
   - id: b
-    text: "`hubble observe --reply --since 2m`"
-    explanation: "`--reply` selects reply packets, not drops."
+    text: The client received the reply.
+    explanation: A reply has its own flows.
   - id: c
-    text: "`hubble observe --type drop --last 2m`"
-    explanation: "`--last` takes a number of flows, not a duration."
+    text: The datapath let the packet pass; it does not tell you whether the application
+      answered.
+    explanation: Correct. A verdict describes the datapath decision, not the application
+      result.
   - id: d
-    text: "`hubble status --verdict DROPPED`"
-    explanation: "`status` has no verdict filter."
+    text: No policy applies to the traffic.
+    explanation: Forwarded traffic can be allowed by a policy.
+  correct_option: c
+  explanation: A verdict describes the datapath decision, not the application result.
+- id: ats055-final-q03
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain what an identity is
+  source_readings:
+  - sections/section-010/module-01/course-03-identities-and-endpoints-in-a-flow.md
+  prompt: What is a Cilium identity?
+  options:
+  - id: a
+    text: A number that Cilium gives to a set of labels, shared by all pods with the
+      same labels.
+    explanation: Correct. The datapath marks packets with this number and Hubble translates
+      it to names and labels.
+  - id: b
+    text: The IP address of a pod.
+    explanation: Addresses change; the identity is derived from labels.
+  - id: c
+    text: The name of the node that runs the pod.
+    explanation: The node name is a separate field of a flow.
+  - id: d
+    text: A certificate that the pod presents to Relay.
+    explanation: Certificates secure Hubble connections, not endpoint identity.
   correct_option: a
-  explanation: The verdict filter selects dropped flows and `--since` limits the time
-    window.
+  explanation: An identity is a number for a set of labels. It lets a flow name the
+    workload instead of only an address.
 - id: ats055-final-q04
   type: single_choice
   difficulty: intermediate
-  learning_objective: Interpret verdicts without overclaiming application success
+  learning_objective: Describe the TLS defaults of Hubble Relay
   source_readings:
-  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
-  prompt: The `probe` is reached by `shuttle` with `FORWARDED` flows, yet users report
-    HTTP 500 errors. What is the correct conclusion?
+  - sections/section-010/module-01/course-04-relay-security-and-tls.md
+  prompt: With the default Helm settings, which Relay connection uses mutual TLS?
   options:
   - id: a
-    text: Hubble is wrong, because forwarded flows cannot exist with errors.
-    explanation: Both can be true at the same time.
+    text: From Relay to the Hubble server of each node on port 4244.
+    explanation: Correct. Hubble server TLS is on by default.
   - id: b
-    text: A policy drops the replies.
-    explanation: Dropped replies would show `DROPPED` flows.
+    text: From the hubble tool to Relay on port 4245.
+    explanation: TLS for the Relay server side is off by default.
   - id: c
-    text: The ring buffer is too small.
-    explanation: Buffer size does not cause HTTP errors.
+    text: From the browser to the Hubble UI.
+    explanation: The UI is reached by port-forward or ingress; it is not a Hubble
+      TLS setting.
   - id: d
-    text: The datapath is not the cause; the application returned the errors, and
-      only a layer 7 flow could show the status.
-    explanation: Correct. Layer 3 and 4 flows cannot show the HTTP status.
-  correct_option: d
-  explanation: Layer 3 and 4 flows cannot show the HTTP status.
+    text: None of them.
+    explanation: The connection to the node servers uses TLS by default.
+  correct_option: a
+  explanation: The Relay-to-server connection uses mTLS by default; the client-to-Relay
+    side needs hubble.relay.tls.server.enabled.
 - id: ats055-final-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Configure flow export filters
+  source_readings:
+  - sections/section-010/module-03/course-03-filters-and-field-masks.md
+  prompt: An allow filter and a deny filter both match a flow. What does the exporter
+    do?
+  options:
+  - id: a
+    text: It does not write the flow, because the deny filter wins.
+    explanation: Correct.
+  - id: b
+    text: It writes the flow, because the allow filter wins.
+    explanation: A deny filter always wins.
+  - id: c
+    text: It writes the flow twice.
+    explanation: A flow is written at most once.
+  - id: d
+    text: It stops the export.
+    explanation: A conflict between filters does not stop the exporter.
+  correct_option: a
+  explanation: A deny filter wins over an allow filter, so a flow that matches both
+    is not written.
+- id: ats055-final-q06
   type: single_choice
   difficulty: beginner
   learning_objective: Distinguish layer 4 flows from layer 7 flows
@@ -134,101 +157,98 @@ questions:
     explanation: They answer DNS and do not read HTTP.
   correct_option: b
   explanation: The proxy parses the application protocol and reports each request.
-- id: ats055-final-q06
-  type: single_choice
-  difficulty: beginner
-  learning_objective: Say what triggers the redirect to the proxy
-  source_readings:
-  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
-  prompt: What makes Cilium redirect the traffic of a pod to the proxy?
-  options:
-  - id: a
-    text: The setting `enable-hubble`.
-    explanation: It only turns on the Hubble server.
-  - id: b
-    text: A Service of type LoadBalancer.
-    explanation: A Service does not trigger the redirect.
-  - id: c
-    text: Installing Hubble Relay.
-    explanation: Relay does not touch the datapath.
-  - id: d
-    text: A policy with a layer 7 rule that selects the pod and port.
-    explanation: Correct. Visibility and enforcement are one feature.
-  correct_option: d
-  explanation: Visibility and enforcement are one feature.
 - id: ats055-final-q07
   type: single_choice
   difficulty: intermediate
-  learning_objective: Explain the order of the layer 4 and layer 7 checks
+  learning_objective: Write a policy with an HTTP method and path rule
   source_readings:
-  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
-  prompt: A source is not listed in `fromEndpoints`, but the HTTP rule would allow
-    its request. What happens?
+  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  prompt: Where does an HTTP rule go in a `CiliumNetworkPolicy`?
   options:
   - id: a
-    text: The proxy allows the request.
-    explanation: The layer 4 check happens first.
+    text: Under `endpointSelector`.
+    explanation: The selector only chooses pods.
   - id: b
-    text: The proxy answers 403.
-    explanation: A 403 needs a connection that reached the proxy.
+    text: In the `metadata` section.
+    explanation: Metadata holds names and labels.
   - id: c
-    text: The connection is dropped at layer 4 before the proxy sees it.
-    explanation: Correct. The HTTP entries only narrow what an allowed source may
-      do.
+    text: Under `toPorts`, in a `rules` block with the key `http`.
+    explanation: Correct. The rule belongs to the port.
   - id: d
-    text: Cilium switches to audit mode.
-    explanation: Audit mode is a separate setting.
+    text: In the `cilium-config` ConfigMap.
+    explanation: The ConfigMap is for agent settings.
   correct_option: c
-  explanation: The HTTP entries only narrow what an allowed source may do.
+  explanation: The rule belongs to the port.
 - id: ats055-final-q08
   type: single_choice
   difficulty: intermediate
-  learning_objective: Predict what a request that breaks the rule receives
+  learning_objective: Combine HTTP rule fields
   source_readings:
-  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
-  prompt: A rule allows only `GET /get`. A client sends `GET /headers`. What does
-    the client receive?
+  - sections/section-020/module-01/course-03-http-rule-matching-method-path-and-headers.md
+  prompt: An HTTP rule entry has method GET and path /get. Which request matches?
   options:
   - id: a
-    text: An HTTP 403 answer from the proxy.
-    explanation: Correct. The proxy answers itself and the application never sees
-      the request.
+    text: GET /get
+    explanation: Correct. Both fields match.
   - id: b
-    text: A connection timeout.
-    explanation: A timeout is typical for a layer 4 drop.
+    text: POST /get
+    explanation: The method does not match.
   - id: c
-    text: HTTP 200 from the application.
-    explanation: The request is not allowed.
+    text: GET /get/1
+    explanation: The path expression must match the whole path.
   - id: d
-    text: HTTP 404 from the application.
-    explanation: The application never gets the request.
+    text: GET /headers
+    explanation: The path does not match.
   correct_option: a
-  explanation: The proxy answers itself and the application never sees the request.
+  explanation: Fields in one entry combine with AND, and the path expression is matched
+    against the whole path.
 - id: ats055-final-q09
   type: single_choice
   difficulty: intermediate
-  learning_objective: State the side effect of an egress policy
+  learning_objective: Find refused requests in Hubble
   source_readings:
-  - sections/section-020/module-02/course-02-write-a-dns-rule-and-read-dns-flows.md
-  prompt: You apply an egress policy for `shuttle` with only a DNS rule. What happens
-    to its connection to the `probe`?
+  - sections/section-020/module-01/course-04-verify-http-visibility-and-verdicts.md
+  prompt: Which command shows only HTTP requests that the proxy refused with a 403?
   options:
   - id: a
-    text: It keeps working, because egress is open by default.
-    explanation: That is true only before a policy selects the pod.
+    text: hubble observe --protocol http --http-status 403
+    explanation: Correct.
   - id: b
-    text: It is redirected to the DNS proxy.
-    explanation: Only port 53 is redirected.
+    text: hubble observe --verdict FORWARDED
+    explanation: This shows forwarded flows.
   - id: c
-    text: It is denied, because the policy now enforces egress and lists nothing else.
-    explanation: Correct. Once an egress policy selects a pod, only listed egress
-      is allowed.
+    text: hubble status
+    explanation: This shows the health of Hubble.
   - id: d
-    text: It becomes a layer 7 flow.
-    explanation: Without an HTTP rule it stays layer 4.
-  correct_option: c
-  explanation: Once an egress policy selects a pod, only listed egress is allowed.
+    text: hubble list nodes
+    explanation: This lists the nodes.
+  correct_option: a
+  explanation: The option --http-status filters on the status code of the HTTP response
+    flow.
 - id: ats055-final-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read layer 7 metrics
+  source_readings:
+  - sections/section-020/module-03/course-03-http-and-dns-metrics.md
+  prompt: Which metric counts HTTP requests that the proxy saw?
+  options:
+  - id: a
+    text: hubble_http_requests_total
+    explanation: Correct. It comes from the httpV2 group.
+  - id: b
+    text: hubble_drop_total
+    explanation: This counts dropped packets.
+  - id: c
+    text: hubble_tcp_flags_total
+    explanation: This counts TCP flags.
+  - id: d
+    text: hubble_icmp_total
+    explanation: This counts ICMP messages.
+  correct_option: a
+  explanation: The httpV2 group exposes hubble_http_requests_total and a duration
+    histogram.
+- id: ats055-final-q11
   type: single_choice
   difficulty: beginner
   learning_objective: Run hubble inside the agent pod and through Relay
@@ -251,7 +271,7 @@ questions:
     explanation: The server value must be an address.
   correct_option: b
   explanation: Relay listens on 4245 behind a Service on port 80.
-- id: ats055-final-q11
+- id: ats055-final-q12
   type: single_choice
   difficulty: advanced
   learning_objective: Change a policy to allow one workload
@@ -276,48 +296,71 @@ questions:
   correct_option: c
   explanation: Without the namespace label, the selector matches the namespace of
     the policy.
-- id: ats055-final-q12
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Diagnose a Service without endpoints
-  source_readings:
-  - sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
-  prompt: The Service `hubble-ui` has no endpoints. Which check is cheapest and comes
-    first?
-  options:
-  - id: a
-    text: Reinstall Cilium.
-    explanation: Too large a step.
-  - id: b
-    text: Restart Hubble Relay.
-    explanation: Relay is not the cause of an empty list.
-  - id: c
-    text: Scale the agent DaemonSet.
-    explanation: The agent does not back the UI Service.
-  - id: d
-    text: Check the Endpoints object, then the replicas, the selector and the readiness.
-    explanation: Correct. Each cause is cheap to check in that order.
-  correct_option: d
-  explanation: Each cause is cheap to check in that order.
 - id: ats055-final-q13
   type: single_choice
   difficulty: intermediate
-  learning_objective: Read the service map and find a dropped connection
+  learning_objective: Process flows with jq
   source_readings:
-  - sections/section-030/module-02/course-02-read-the-service-map-and-the-flows-table.md
-  prompt: What does a missing line in the service map prove?
+  - sections/section-030/module-01/course-03-output-formats-and-jq.md
+  prompt: Which output option gives one JSON object per flow for jq?
   options:
   - id: a
-    text: The connection is forbidden.
-    explanation: The map does not know policies.
+    text: "-o json"
+    explanation: Correct.
   - id: b
-    text: The destination is down.
-    explanation: A destination can be up without traffic.
+    text: "-o compact"
+    explanation: Compact is a short text line.
   - id: c
-    text: 'Nothing about policy: no flow for that pair was observed in the window.'
-    explanation: Correct. The map shows observed traffic, not allowed traffic.
+    text: "-o dict"
+    explanation: Dict prints key and value lines.
   - id: d
-    text: Relay is broken.
-    explanation: Not necessarily.
-  correct_option: c
-  explanation: The map shows observed traffic, not allowed traffic.
+    text: "-o table"
+    explanation: Table prints columns.
+  correct_option: a
+  explanation: The json format prints one object per line with the flow under the
+    key flow.
+- id: ats055-final-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Negate a filter
+  source_readings:
+  - sections/section-030/module-01/course-04-advanced-flow-filters.md
+  prompt: Which option hides flows that match the filters after it?
+  options:
+  - id: a
+    text: "--not"
+    explanation: Correct.
+  - id: b
+    text: "--last"
+    explanation: This limits the number of flows.
+  - id: c
+    text: "--follow"
+    explanation: This keeps streaming new flows.
+  - id: d
+    text: "--all"
+    explanation: This prints every flow in the buffer.
+  correct_option: a
+  explanation: The option --not negates the filters that follow it.
+- id: ats055-final-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Apply the troubleshooting method
+  source_readings:
+  - sections/section-030/module-03/course-01-start-with-the-verdict.md
+  prompt: What is the first step when a pod cannot reach a service?
+  options:
+  - id: a
+    text: Check for dropped flows of the pod and read the drop reason.
+    explanation: Correct.
+  - id: b
+    text: Restart the Cilium agents.
+    explanation: A restart hides evidence and may not help.
+  - id: c
+    text: Delete the network policy.
+    explanation: This opens access without a reason.
+  - id: d
+    text: Increase the flow buffer.
+    explanation: Do this only if flows are missing.
+  correct_option: a
+  explanation: The verdict tells whether the network dropped the traffic, and the
+    drop reason points to the next check.

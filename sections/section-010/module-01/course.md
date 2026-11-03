@@ -4,7 +4,9 @@ When a request fails inside a Kubernetes cluster, the first question is what the
 
 This module teaches you which components produce, collect and serve those records, and how to read a single record. You will learn where a flow is created, which component stores it, which component joins the records of many nodes, and what each field and each verdict in a record means.
 
-The module has two parts. **Hubble Components And Where Flows Come From** follows a flow from the Cilium agent on a node to your terminal and shows how Hubble and Hubble Relay are enabled. **Reading A Flow Record And Its Verdict** explains the fields of a flow, the verdict values and what a verdict does and does not prove.
+The module has four parts. The first two are: **Hubble Components And Where Flows Come From** follows a flow from the Cilium agent on a node to your terminal and shows how Hubble and Hubble Relay are enabled. **Reading A Flow Record And Its Verdict** explains the fields of a flow, the verdict values and what a verdict does and does not prove.
+
+The other two parts are: **Identities And Endpoints In A Flow** explains how a number in the datapath becomes a pod name, and **Hubble Relay Security And TLS** explains how the connections of Relay are protected.
 
 ## Learning objectives
 
@@ -16,6 +18,8 @@ After this module you can:
 - Read the source, destination, protocol, direction and verdict of a flow record.
 - Tell a forwarded flow from a dropped flow and name the drop reason.
 - Explain why a forwarded verdict does not prove that an application answered correctly.
+- Explain what an identity is and read the reserved identities `host`, `world` and `remote-node`.
+- Say which Relay connection uses mutual TLS by default and which does not.
 
 ## Before you start
 

@@ -243,3 +243,119 @@ questions:
     explanation: Those are HTTP and HTTPS.
   correct_option: a
   explanation: Large answers use TCP.
+- id: ats055-020-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Combine HTTP rule fields
+  source_readings:
+  - sections/section-020/module-01/course-03-http-rule-matching-method-path-and-headers.md
+  prompt: An HTTP rule entry has method GET and path /get. Which request matches?
+  options:
+  - id: a
+    text: GET /get
+    explanation: Correct. Both fields match.
+  - id: b
+    text: POST /get
+    explanation: The method does not match.
+  - id: c
+    text: GET /get/1
+    explanation: The path expression must match the whole path.
+  - id: d
+    text: GET /headers
+    explanation: The path does not match.
+  correct_option: a
+  explanation: Fields in one entry combine with AND, and the path expression is matched
+    against the whole path.
+- id: ats055-020-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find refused requests in Hubble
+  source_readings:
+  - sections/section-020/module-01/course-04-verify-http-visibility-and-verdicts.md
+  prompt: Which command shows only HTTP requests that the proxy refused with a 403?
+  options:
+  - id: a
+    text: hubble observe --protocol http --http-status 403
+    explanation: Correct.
+  - id: b
+    text: hubble observe --verdict FORWARDED
+    explanation: This shows forwarded flows.
+  - id: c
+    text: hubble status
+    explanation: This shows the health of Hubble.
+  - id: d
+    text: hubble list nodes
+    explanation: This lists the nodes.
+  correct_option: a
+  explanation: The option --http-status filters on the status code of the HTTP response
+    flow.
+- id: ats055-020-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Separate a DNS rule from toFQDNs
+  source_readings:
+  - sections/section-020/module-02/course-03-fqdn-selectors-and-name-patterns.md
+  prompt: What does a toFQDNs selector allow?
+  options:
+  - id: a
+    text: Connections to the addresses that the listed names resolved to.
+    explanation: Correct. It needs a DNS rule so that the agent sees the answers.
+  - id: b
+    text: The DNS query itself.
+    explanation: The dns rule allows or refuses the query.
+  - id: c
+    text: Traffic to any address.
+    explanation: It allows only the learned addresses.
+  - id: d
+    text: Ingress from other pods.
+    explanation: toFQDNs is an egress selector.
+  correct_option: a
+  explanation: toFQDNs allows connections by name, and it depends on a dns rule that
+    lets the agent see the answers.
+- id: ats055-020-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain DNS proxy limits
+  source_readings:
+  - sections/section-020/module-02/course-04-dns-proxy-behaviour-and-limits.md
+  prompt: Why does DNS over HTTPS hide lookups from Cilium?
+  options:
+  - id: a
+    text: The names travel inside encrypted web traffic, not through the DNS proxy
+      port.
+    explanation: Correct.
+  - id: b
+    text: Hubble does not support UDP.
+    explanation: Hubble supports UDP.
+  - id: c
+    text: The cluster DNS blocks it.
+    explanation: The reason is the transport, not the cluster DNS.
+  - id: d
+    text: Cilium disables the proxy for HTTPS.
+    explanation: The proxy cannot parse the encrypted stream.
+  correct_option: a
+  explanation: The proxy sees only DNS on the port that the rule names, so lookups
+    over HTTPS are not visible.
+- id: ats055-020-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read layer 7 metrics
+  source_readings:
+  - sections/section-020/module-03/course-03-http-and-dns-metrics.md
+  prompt: Which metric counts HTTP requests that the proxy saw?
+  options:
+  - id: a
+    text: hubble_http_requests_total
+    explanation: Correct. It comes from the httpV2 group.
+  - id: b
+    text: hubble_drop_total
+    explanation: This counts dropped packets.
+  - id: c
+    text: hubble_tcp_flags_total
+    explanation: This counts TCP flags.
+  - id: d
+    text: hubble_icmp_total
+    explanation: This counts ICMP messages.
+  correct_option: a
+  explanation: The httpV2 group exposes hubble_http_requests_total and a duration
+    histogram.

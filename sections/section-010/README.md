@@ -14,6 +14,10 @@ This section teaches what Hubble records and how long it keeps it. A flow is one
 - Interpret forwarded and dropped verdicts without overclaiming application success.
 - Enable Hubble metrics and read the drop counter from the metrics endpoint.
 - Size the flow buffer with a valid capacity and explain what a restart removes.
+- Explain identities, reserved identities and how a flow gets its names.
+- Describe the two Relay connections and which one uses mutual TLS by default.
+- Choose metric groups and label contexts, and explain how Prometheus scrapes them.
+- Export flows to a file with filters and field masks, and explain rotation.
 
 ---
 
@@ -33,10 +37,17 @@ This section teaches what Hubble records and how long it keeps it. A flow is one
     astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-010/module-02/playground
     ```
 
+### 3. Hubble Flow Export
+*   **Module Reader:** **[Module 3: Hubble Flow Export](./module-03/course.md)**
+*   **Hands-on Playground:** `sections/section-010/module-03/playground` - the same cluster. Flow export is off.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-010/module-03/playground
+    ```
+
 ### Capstone
 *   **Lab:** `sections/section-010/capstone/labs/lab-01` - observe dropped traffic end to end: metrics, a larger buffer and a report of the drop.
 
 ### Knowledge check
-*   `sections/section-010/quiz.yaml` - ten questions on this section.
+*   `sections/section-010/quiz.yaml` - fifteen questions on this section.
 
 All graded labs are UNTESTED. They passed static checks only.

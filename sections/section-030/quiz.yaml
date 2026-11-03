@@ -240,3 +240,116 @@ questions:
     explanation: Only for pods with a layer 7 rule.
   correct_option: a
   explanation: The UI shows flows and changes nothing.
+- id: ats055-030-q11
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Process flows with jq
+  source_readings:
+  - sections/section-030/module-01/course-03-output-formats-and-jq.md
+  prompt: Which output option gives one JSON object per flow for jq?
+  options:
+  - id: a
+    text: "-o json"
+    explanation: Correct.
+  - id: b
+    text: "-o compact"
+    explanation: Compact is a short text line.
+  - id: c
+    text: "-o dict"
+    explanation: Dict prints key and value lines.
+  - id: d
+    text: "-o table"
+    explanation: Table prints columns.
+  correct_option: a
+  explanation: The json format prints one object per line with the flow under the
+    key flow.
+- id: ats055-030-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Negate a filter
+  source_readings:
+  - sections/section-030/module-01/course-04-advanced-flow-filters.md
+  prompt: Which option hides flows that match the filters after it?
+  options:
+  - id: a
+    text: "--not"
+    explanation: Correct.
+  - id: b
+    text: "--last"
+    explanation: This limits the number of flows.
+  - id: c
+    text: "--follow"
+    explanation: This keeps streaming new flows.
+  - id: d
+    text: "--all"
+    explanation: This prints every flow in the buffer.
+  correct_option: a
+  explanation: The option --not negates the filters that follow it.
+- id: ats055-030-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Use the Hubble UI filters
+  source_readings:
+  - sections/section-030/module-02/course-03-namespace-filters-and-layer-7-in-the-ui.md
+  prompt: What does a red edge in the service map mean?
+  options:
+  - id: a
+    text: At least one flow between the two was dropped.
+    explanation: Correct.
+  - id: b
+    text: All traffic between them failed.
+    explanation: The edge only says that a drop was seen.
+  - id: c
+    text: The pod is not ready.
+    explanation: Readiness is not shown by the edge colour.
+  - id: d
+    text: A node is unreachable.
+    explanation: This would show as missing data.
+  correct_option: a
+  explanation: The UI colours an edge by the verdicts it saw in the time window.
+- id: ats055-030-q14
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Troubleshoot the UI
+  source_readings:
+  - sections/section-030/module-02/course-04-troubleshooting-the-hubble-ui.md
+  prompt: The hubble-ui pod is ready but the Service has no endpoints. What do you
+    check first?
+  options:
+  - id: a
+    text: Whether the Service selector matches the pod labels.
+    explanation: Correct.
+  - id: b
+    text: The size of the flow buffer.
+    explanation: The buffer does not affect Service endpoints.
+  - id: c
+    text: The Hubble metrics port.
+    explanation: Metrics are unrelated.
+  - id: d
+    text: The drop reasons.
+    explanation: Drop reasons are about packets.
+  correct_option: a
+  explanation: A Service gets endpoints only from ready pods that its selector matches.
+- id: ats055-030-q15
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Apply the troubleshooting method
+  source_readings:
+  - sections/section-030/module-03/course-01-start-with-the-verdict.md
+  prompt: What is the first step when a pod cannot reach a service?
+  options:
+  - id: a
+    text: Check for dropped flows of the pod and read the drop reason.
+    explanation: Correct.
+  - id: b
+    text: Restart the Cilium agents.
+    explanation: A restart hides evidence and may not help.
+  - id: c
+    text: Delete the network policy.
+    explanation: This opens access without a reason.
+  - id: d
+    text: Increase the flow buffer.
+    explanation: Do this only if flows are missing.
+  correct_option: a
+  explanation: The verdict tells whether the network dropped the traffic, and the
+    drop reason points to the next check.

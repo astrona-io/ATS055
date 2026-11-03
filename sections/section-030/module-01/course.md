@@ -4,7 +4,9 @@ The Hubble command-line tool is the most direct way to ask the network what happ
 
 This module teaches the command `hubble observe` and its filters, and the two ways to run the tool: inside a Cilium agent pod, and on your own machine through Hubble Relay. It then applies the tool to a real task: finding the pod whose requests are dropped and deciding what to change.
 
-The module has two parts. **Connect The Hubble CLI And Observe Flows** explains how the tool reaches a Hubble API, the output formats and the first filters. **Filter Flows To Find A Dropped Client** works through a drop investigation with combined filters and ends with a safe policy change.
+The module has four parts. The first two are: **Connect The Hubble CLI And Observe Flows** explains how the tool reaches a Hubble API, the output formats and the first filters. **Filter Flows To Find A Dropped Client** works through a drop investigation with combined filters and ends with a safe policy change.
+
+The other two parts are: **Output Formats And jq** turns flows into lists and counts, and **Advanced Flow Filters** covers the filters for time, labels, identities, protocols and ports, and how to negate them.
 
 ## Learning objectives
 
@@ -16,6 +18,8 @@ After this module you can:
 - Filter flows by pod, namespace, port, protocol, verdict, direction and time.
 - Find the source and the destination of dropped traffic and the destination port.
 - Change a policy to allow one workload without allowing others.
+- Choose an output format and process JSON output with `jq`.
+- Combine and negate filters to cut a large buffer down to the relevant flows.
 
 ## Before you start
 
