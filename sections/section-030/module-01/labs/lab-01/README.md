@@ -1,10 +1,23 @@
 ---
-draft: true
-exam_objectives:
-- Know How to Use Hubble from the Command Line or the Hubble UI
+estimated_duration: 25m
 ---
-# Discover The Relay Service For Hubble CLI
 
-Verify the relay service and ready deployment.
+# Lab: Find The Dropped Client With The Hubble CLI
 
-The task and solution use a separate pinned kind cluster. Run `testing/smoke.sh` with its private kubeconfig to verify initial rejection and reference success. Static validation is not live evidence. Runtime verification remains pending.
+UNTESTED. This lab was written from the Cilium chart and documentation and has not been run. Run `astrona test -c .` before relying on it.
+
+## Run it
+
+```sh
+astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-030/module-01/labs/lab-01
+astrona submit --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-030/module-01/labs/lab-01
+astrona destroy ats-055-lab-030-01
+```
+
+## Checks
+
+| Script | What it proves |
+| --- | --- |
+| `validate-cli-report-correct.sh` | cli-report names the dropped source, destination, port and verdict |
+| `validate-rogue-forwarded.sh` | Requests from rogue to the probe are now forwarded |
+| `validate-drifter-still-denied.sh` | drifter is still refused |

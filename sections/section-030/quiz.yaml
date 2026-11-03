@@ -1,0 +1,242 @@
+# Knowledge check for section 030. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats055-030
+course_id: ATS055
+exam_code: CCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-030
+  title: Know How to Use Hubble from the Command Line or the Hubble UI
+questions:
+- id: ats055-030-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Run hubble inside the agent pod and through Relay
+  source_readings:
+  - sections/section-030/module-01/course-01-connect-the-hubble-cli-and-observe-flows.md
+  prompt: Which command reaches Relay from your own machine?
+  options:
+  - id: a
+    text: "`kubectl exec ds/cilium -- hubble status`"
+    explanation: That uses the local socket of one agent.
+  - id: b
+    text: "`kubectl -n kube-system port-forward service/hubble-relay 4245:80`, then
+      run `hubble` against localhost:4245."
+    explanation: Correct. Relay listens on 4245 behind a Service on port 80.
+  - id: c
+    text: "`kubectl port-forward service/hubble-ui 12000:80`"
+    explanation: That reaches the UI.
+  - id: d
+    text: "`hubble observe --server relay`"
+    explanation: The server value must be an address.
+  correct_option: b
+  explanation: Relay listens on 4245 behind a Service on port 80.
+- id: ats055-030-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Choose an output format
+  source_readings:
+  - sections/section-030/module-01/course-01-connect-the-hubble-cli-and-observe-flows.md
+  prompt: Which format fits a script that processes flows?
+  options:
+  - id: a
+    text: "`-o dict`"
+    explanation: Dictionary output is for people.
+  - id: b
+    text: "`-o compact`"
+    explanation: Compact output is for scanning.
+  - id: c
+    text: "`--follow`"
+    explanation: That keeps the command running.
+  - id: d
+    text: "`-o json`"
+    explanation: Correct. JSON has every field as a key.
+  correct_option: d
+  explanation: JSON has every field as a key.
+- id: ats055-030-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Filter flows by pod, namespace, port, protocol, verdict and
+    time
+  source_readings:
+  - sections/section-030/module-01/course-01-connect-the-hubble-cli-and-observe-flows.md
+  prompt: Which filter selects flows from the last minute?
+  options:
+  - id: a
+    text: "`--since 1m`"
+    explanation: Correct. The option takes a duration.
+  - id: b
+    text: "`--last 1m`"
+    explanation: "`--last` takes a number of flows."
+  - id: c
+    text: "`--time 1`"
+    explanation: No such option.
+  - id: d
+    text: "`--follow 1m`"
+    explanation: "`--follow` takes no duration."
+  correct_option: a
+  explanation: The option takes a duration.
+- id: ats055-030-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Find the source, destination and port of dropped traffic
+  source_readings:
+  - sections/section-030/module-01/course-02-filter-flows-to-find-a-dropped-client.md
+  prompt: What is the best first step when you do not know the affected pod?
+  options:
+  - id: a
+    text: Restart the Cilium agent.
+    explanation: That empties the buffer.
+  - id: b
+    text: Filter by the destination pod name you guess.
+    explanation: A wrong name matches nothing.
+  - id: c
+    text: Filter on `--verdict DROPPED` and read the source, destination and port.
+    explanation: Correct. The verdict is the event you look for.
+  - id: d
+    text: Delete the policy.
+    explanation: That changes the system without evidence.
+  correct_option: c
+  explanation: The verdict is the event you look for.
+- id: ats055-030-q05
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Change a policy to allow one workload
+  source_readings:
+  - sections/section-030/module-01/course-02-filter-flows-to-find-a-dropped-client.md
+  prompt: A client in `outpost` must reach the `probe`. What must its `fromEndpoints`
+    selector contain?
+  options:
+  - id: a
+    text: Only the pod label.
+    explanation: That matches pods in `starfleet`.
+  - id: b
+    text: Only the namespace label.
+    explanation: That would allow every pod in `outpost`.
+  - id: c
+    text: 'The pod label and the namespace label `io.kubernetes.pod.namespace: outpost`.'
+    explanation: Correct. Without the namespace label, the selector matches the namespace
+      of the policy.
+  - id: d
+    text: The pod IP address.
+    explanation: Selectors use labels and identities.
+  correct_option: c
+  explanation: Without the namespace label, the selector matches the namespace of
+    the policy.
+- id: ats055-030-q06
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the parts of the Hubble UI
+  source_readings:
+  - sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
+  prompt: Where does the Hubble UI read its flows from?
+  options:
+  - id: a
+    text: From Hubble Relay.
+    explanation: Correct. The UI backend asks Relay for flows.
+  - id: b
+    text: From each agent directly.
+    explanation: The UI uses Relay.
+  - id: c
+    text: From the Kubernetes API.
+    explanation: Flows are not stored there.
+  - id: d
+    text: From Prometheus.
+    explanation: Metrics are not flows.
+  correct_option: a
+  explanation: The UI backend asks Relay for flows.
+- id: ats055-030-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Diagnose a Service without endpoints
+  source_readings:
+  - sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
+  prompt: The Service `hubble-ui` has no endpoints. Which check is cheapest and comes
+    first?
+  options:
+  - id: a
+    text: Reinstall Cilium.
+    explanation: Too large a step.
+  - id: b
+    text: Restart Hubble Relay.
+    explanation: Relay is not the cause of an empty list.
+  - id: c
+    text: Scale the agent DaemonSet.
+    explanation: The agent does not back the UI Service.
+  - id: d
+    text: Check the Endpoints object, then the replicas, the selector and the readiness.
+    explanation: Correct. Each cause is cheap to check in that order.
+  correct_option: d
+  explanation: Each cause is cheap to check in that order.
+- id: ats055-030-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the merge patch limit on a selector
+  source_readings:
+  - sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
+  prompt: A Service selector has the wrong key. Why can a merge patch with the right
+    key fail?
+  options:
+  - id: a
+    text: A merge patch is rejected by the API server.
+    explanation: It is accepted.
+  - id: b
+    text: A merge patch adds keys, so the old key stays and the selector still matches
+      nothing.
+    explanation: Correct. A JSON patch with `replace` sets the whole map.
+  - id: c
+    text: Selectors cannot be changed.
+    explanation: They can.
+  - id: d
+    text: The patch needs a restart of the agent.
+    explanation: A Service change does not.
+  correct_option: b
+  explanation: A JSON patch with `replace` sets the whole map.
+- id: ats055-030-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read the service map and find a dropped connection
+  source_readings:
+  - sections/section-030/module-02/course-02-read-the-service-map-and-the-flows-table.md
+  prompt: What does a missing line in the service map prove?
+  options:
+  - id: a
+    text: The connection is forbidden.
+    explanation: The map does not know policies.
+  - id: b
+    text: The destination is down.
+    explanation: A destination can be up without traffic.
+  - id: c
+    text: 'Nothing about policy: no flow for that pair was observed in the window.'
+    explanation: Correct. The map shows observed traffic, not allowed traffic.
+  - id: d
+    text: Relay is broken.
+    explanation: Not necessarily.
+  correct_option: c
+  explanation: The map shows observed traffic, not allowed traffic.
+- id: ats055-030-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Match the map to a policy and the command line
+  source_readings:
+  - sections/section-030/module-02/course-02-read-the-service-map-and-the-flows-table.md
+  prompt: Which statement about the UI is correct?
+  options:
+  - id: a
+    text: 'It is read-only: a repair needs a policy change made with `kubectl`.'
+    explanation: Correct. The UI shows flows and changes nothing.
+  - id: b
+    text: It can edit policies from the flows table.
+    explanation: It cannot.
+  - id: c
+    text: It shows flows older than the ring buffer.
+    explanation: It reads the same buffers.
+  - id: d
+    text: It shows layer 7 data for all pods.
+    explanation: Only for pods with a layer 7 rule.
+  correct_option: a
+  explanation: The UI shows flows and changes nothing.

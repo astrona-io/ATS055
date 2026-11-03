@@ -1,186 +1,323 @@
+# Copy of the final domain quiz kept for the question bank index.
 schema_version: 1
 kind: question_bank
 id: ats055-domain-review
 course_id: ATS055
 exam_code: CCA
 status: draft
-provenance: Original practice material; not official examination questions.
+provenance: Original practice material written for this course; not official exam
+  questions.
 scope:
   type: domain
-  id: domain-review
+  id: network-observability
   title: Network Observability
-placement:
-  position: after
-  reading: sections/section-030/module-01/course-02-summary.md
 questions:
-- id: ats055-domain-review-q01
+- id: ats055-final-q01
   type: single_choice
-  difficulty: intermediate
-  learning_objective: Explain the information in supported Hubble flow records.
+  difficulty: beginner
+  learning_objective: Name the Hubble components and where flows are stored
   source_readings:
-  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
-  prompt: What can a supported flow verdict help establish?
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: On a node, which component turns datapath events into flows and stores the
+    most recent ones?
   options:
   - id: a
-    text: The publisher of every image.
-    explanation: Artifact verification is unrelated to that verdict.
+    text: Hubble Relay, in a database on the control plane.
+    explanation: Relay joins the flows of many nodes and does not store them.
   - id: b
-    text: The observed forwarding or policy outcome at that point.
-    explanation: It is scoped network evidence.
+    text: The Hubble server inside the Cilium agent, in an in-memory ring buffer.
+    explanation: Correct. The Hubble server in the agent builds flows from the kernel
+      events and keeps them in a fixed-size ring buffer in memory.
   - id: c
-    text: The correctness of every business transaction.
-    explanation: Application outcomes need separate evidence.
+    text: The Hubble UI, in a file on the node.
+    explanation: The UI only draws flows that it reads from Relay.
+  - id: d
+    text: The Cilium operator, in a ConfigMap.
+    explanation: The operator does not create or store flows.
   correct_option: b
-  explanation: It is scoped network evidence.
-- id: ats055-domain-review-q02
+  explanation: The Hubble server in the agent builds flows from the kernel events
+    and keeps them in a fixed-size ring buffer in memory.
+- id: ats055-final-q02
   type: single_choice
   difficulty: intermediate
-  learning_objective: Distinguish local server scope from Relay aggregation.
+  learning_objective: Read the health and fill level of the flow buffer
   source_readings:
-  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
-  prompt: Why can a local Hubble view miss another node's traffic?
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: 'In `hubble status` through Relay, the line `Connected Nodes: 2/3` appears.
+    What does it mean?'
   options:
   - id: a
-    text: The server's default observation scope is local.
-    explanation: Relay can aggregate reachable server views.
+    text: All three nodes are healthy and one has no flows.
+    explanation: The count is about connections, not about flows.
   - id: b
-    text: All nodes necessarily share one unlimited local buffer.
-    explanation: Observation storage has scope and limits.
+    text: The buffer is 67 percent full.
+    explanation: The fill level is shown in the line `Current/Max Flows`.
   - id: c
-    text: Remote traffic cannot exist in Kubernetes.
-    explanation: Cross-node paths are possible.
-  correct_option: a
-  explanation: Relay can aggregate reachable server views.
-- id: ats055-domain-review-q03
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Account for buffers, filters and absent observations.
-  source_readings:
-  - sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
-  prompt: What can explain no matching flow records?
-  options:
-  - id: a
-    text: Definitive proof that no traffic ever occurred.
-    explanation: Coverage gaps prevent that conclusion.
-  - id: b
-    text: Automatic proof that the application is healthy.
-    explanation: Silence is not an application result.
-  - id: c
-    text: Filters, observation scope, disabled visibility or retention limits.
-    explanation: Absence has multiple possible causes.
+    text: Relay cannot reach one node, so that node's flows are missing from every
+      list.
+    explanation: Correct. Relay merges only the nodes it is connected to.
+  - id: d
+    text: Hubble is disabled on two nodes.
+    explanation: A disabled node is not the same as a connection that Relay cannot
+      make.
   correct_option: c
-  explanation: Absence has multiple possible causes.
-- id: ats055-domain-review-q04
+  explanation: Relay merges only the nodes it is connected to.
+- id: ats055-final-q03
   type: single_choice
   difficulty: intermediate
-  learning_objective: Distinguish Layer 3 or 4 observations from Layer 7 context.
+  learning_objective: Tell a forwarded flow from a dropped flow and name the drop
+    reason
   source_readings:
-  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
-  prompt: Which observation is Layer 7 context?
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: Which command shows only the dropped flows of the last two minutes?
   options:
   - id: a
-    text: Only a node's IP address.
-    explanation: That is network address context.
+    text: "`hubble observe --verdict DROPPED --since 2m`"
+    explanation: Correct. The verdict filter selects dropped flows and `--since` limits
+      the time window.
   - id: b
-    text: An HTTP method or path under supported visibility.
-    explanation: It describes an application protocol operation.
+    text: "`hubble observe --reply --since 2m`"
+    explanation: "`--reply` selects reply packets, not drops."
   - id: c
-    text: Only a destination TCP port.
-    explanation: That is transport context.
+    text: "`hubble observe --type drop --last 2m`"
+    explanation: "`--last` takes a number of flows, not a duration."
+  - id: d
+    text: "`hubble status --verdict DROPPED`"
+    explanation: "`status` has no verdict filter."
+  correct_option: a
+  explanation: The verdict filter selects dropped flows and `--since` limits the time
+    window.
+- id: ats055-final-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret verdicts without overclaiming application success
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: The `probe` is reached by `shuttle` with `FORWARDED` flows, yet users report
+    HTTP 500 errors. What is the correct conclusion?
+  options:
+  - id: a
+    text: Hubble is wrong, because forwarded flows cannot exist with errors.
+    explanation: Both can be true at the same time.
+  - id: b
+    text: A policy drops the replies.
+    explanation: Dropped replies would show `DROPPED` flows.
+  - id: c
+    text: The ring buffer is too small.
+    explanation: Buffer size does not cause HTTP errors.
+  - id: d
+    text: The datapath is not the cause; the application returned the errors, and
+      only a layer 7 flow could show the status.
+    explanation: Correct. Layer 3 and 4 flows cannot show the HTTP status.
+  correct_option: d
+  explanation: Layer 3 and 4 flows cannot show the HTTP status.
+- id: ats055-final-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish layer 4 flows from layer 7 flows
+  source_readings:
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: Which component produces the HTTP request flows in Hubble?
+  options:
+  - id: a
+    text: The eBPF programs in the kernel.
+    explanation: They see addresses and ports only.
+  - id: b
+    text: The Envoy proxy inside the Cilium agent.
+    explanation: Correct. The proxy parses the application protocol and reports each
+      request.
+  - id: c
+    text: Hubble Relay.
+    explanation: Relay only merges flows.
+  - id: d
+    text: The CoreDNS pods.
+    explanation: They answer DNS and do not read HTTP.
   correct_option: b
-  explanation: It describes an application protocol operation.
-- id: ats055-domain-review-q05
+  explanation: The proxy parses the application protocol and reports each request.
+- id: ats055-final-q06
   type: single_choice
-  difficulty: intermediate
-  learning_objective: Explain visibility-enabling policy and proxy participation.
+  difficulty: beginner
+  learning_objective: Say what triggers the redirect to the proxy
   source_readings:
-  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
-  prompt: Why might HTTP details be absent from an encrypted connection?
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: What makes Cilium redirect the traffic of a pod to the proxy?
   options:
   - id: a
-    text: The observation point may not have plaintext application context.
-    explanation: Encryption changes protocol visibility.
+    text: The setting `enable-hubble`.
+    explanation: It only turns on the Hubble server.
   - id: b
-    text: The absence proves the connection never occurred.
-    explanation: Lower-layer observations can still exist.
+    text: A Service of type LoadBalancer.
+    explanation: A Service does not trigger the redirect.
   - id: c
-    text: All TLS packets contain plaintext request paths.
-    explanation: TLS protects application payloads.
-  correct_option: a
-  explanation: Encryption changes protocol visibility.
-- id: ats055-domain-review-q06
+    text: Installing Hubble Relay.
+    explanation: Relay does not touch the datapath.
+  - id: d
+    text: A policy with a layer 7 rule that selects the pod and port.
+    explanation: Correct. Visibility and enforcement are one feature.
+  correct_option: d
+  explanation: Visibility and enforcement are one feature.
+- id: ats055-final-q07
   type: single_choice
   difficulty: intermediate
-  learning_objective: Evaluate observation changes without unintended enforcement.
+  learning_objective: Explain the order of the layer 4 and layer 7 checks
   source_readings:
-  - sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
-  prompt: Why review a visibility policy's enforcement behavior?
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: A source is not listed in `fromEndpoints`, but the HTTP rule would allow
+    its request. What happens?
   options:
   - id: a
-    text: Every visibility setting automatically disables all policy.
-    explanation: That is not the enforcement contract.
+    text: The proxy allows the request.
+    explanation: The layer 4 check happens first.
   - id: b
-    text: Hubble UI always modifies labels silently.
-    explanation: The UI's presentation does not explain this rule effect.
+    text: The proxy answers 403.
+    explanation: A 403 needs a connection that reached the proxy.
   - id: c
-    text: Layer 7 constraints can cause drops under documented semantics.
-    explanation: Observation intent alone does not guarantee observe-only behavior.
+    text: The connection is dropped at layer 4 before the proxy sees it.
+    explanation: Correct. The HTTP entries only narrow what an allowed source may
+      do.
+  - id: d
+    text: Cilium switches to audit mode.
+    explanation: Audit mode is a separate setting.
   correct_option: c
-  explanation: Observation intent alone does not guarantee observe-only behavior.
-- id: ats055-domain-review-q07
+  explanation: The HTTP entries only narrow what an allowed source may do.
+- id: ats055-final-q08
   type: single_choice
   difficulty: intermediate
-  learning_objective: Choose local or Relay access for the intended scope.
+  learning_objective: Predict what a request that breaks the rule receives
   source_readings:
-  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
-  prompt: Why choose the client endpoint deliberately?
+  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  prompt: A rule allows only `GET /get`. A client sends `GET /headers`. What does
+    the client receive?
   options:
   - id: a
-    text: The endpoint's name grants application permission.
-    explanation: Client access does not authorize business operations.
+    text: An HTTP 403 answer from the proxy.
+    explanation: Correct. The proxy answers itself and the application never sees
+      the request.
   - id: b
-    text: Local server and Relay views have different scopes.
-    explanation: The access target determines available observations.
+    text: A connection timeout.
+    explanation: A timeout is typical for a layer 4 drop.
   - id: c
-    text: Every UI always contains all clusters forever.
-    explanation: Aggregation and retention are bounded.
+    text: HTTP 200 from the application.
+    explanation: The request is not allowed.
+  - id: d
+    text: HTTP 404 from the application.
+    explanation: The application never gets the request.
+  correct_option: a
+  explanation: The proxy answers itself and the application never sees the request.
+- id: ats055-final-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: State the side effect of an egress policy
+  source_readings:
+  - sections/section-020/module-02/course-02-write-a-dns-rule-and-read-dns-flows.md
+  prompt: You apply an egress policy for `shuttle` with only a DNS rule. What happens
+    to its connection to the `probe`?
+  options:
+  - id: a
+    text: It keeps working, because egress is open by default.
+    explanation: That is true only before a policy selects the pod.
+  - id: b
+    text: It is redirected to the DNS proxy.
+    explanation: Only port 53 is redirected.
+  - id: c
+    text: It is denied, because the policy now enforces egress and lists nothing else.
+    explanation: Correct. Once an egress policy selects a pod, only listed egress
+      is allowed.
+  - id: d
+    text: It becomes a layer 7 flow.
+    explanation: Without an HTTP rule it stays layer 4.
+  correct_option: c
+  explanation: Once an egress policy selects a pod, only listed egress is allowed.
+- id: ats055-final-q10
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Run hubble inside the agent pod and through Relay
+  source_readings:
+  - sections/section-030/module-01/course-01-connect-the-hubble-cli-and-observe-flows.md
+  prompt: Which command reaches Relay from your own machine?
+  options:
+  - id: a
+    text: "`kubectl exec ds/cilium -- hubble status`"
+    explanation: That uses the local socket of one agent.
+  - id: b
+    text: "`kubectl -n kube-system port-forward service/hubble-relay 4245:80`, then
+      run `hubble` against localhost:4245."
+    explanation: Correct. Relay listens on 4245 behind a Service on port 80.
+  - id: c
+    text: "`kubectl port-forward service/hubble-ui 12000:80`"
+    explanation: That reaches the UI.
+  - id: d
+    text: "`hubble observe --server relay`"
+    explanation: The server value must be an address.
   correct_option: b
-  explanation: The access target determines available observations.
-- id: ats055-domain-review-q08
+  explanation: Relay listens on 4245 behind a Service on port 80.
+- id: ats055-final-q11
   type: single_choice
-  difficulty: intermediate
-  learning_objective: Interpret filters, time selection and request or reply direction.
+  difficulty: advanced
+  learning_objective: Change a policy to allow one workload
   source_readings:
-  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
-  prompt: What can an overly narrow filter do?
+  - sections/section-030/module-01/course-02-filter-flows-to-find-a-dropped-client.md
+  prompt: A client in `outpost` must reach the `probe`. What must its `fromEndpoints`
+    selector contain?
   options:
   - id: a
-    text: Hide relevant observations from the displayed result.
-    explanation: Selection affects the view rather than the underlying event.
+    text: Only the pod label.
+    explanation: That matches pods in `starfleet`.
   - id: b
-    text: Prevent every packet from being forwarded.
-    explanation: Client filters are not the forwarding policy.
+    text: Only the namespace label.
+    explanation: That would allow every pod in `outpost`.
   - id: c
-    text: Rewrite all historical addresses.
-    explanation: Display selection does not mutate history.
-  correct_option: a
-  explanation: Selection affects the view rather than the underlying event.
-- id: ats055-domain-review-q09
-  type: single_choice
-  difficulty: intermediate
-  learning_objective: Distinguish client access failures from traffic failures.
-  source_readings:
-  - sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
-  prompt: A client cannot authenticate to Relay. What is established?
-  options:
-  - id: a
-    text: All application connections are down necessarily.
-    explanation: Relay access and forwarding are separate.
-  - id: b
-    text: Every policy is malformed.
-    explanation: Authentication failure does not prove policy defects.
-  - id: c
-    text: The observation access path failed.
-    explanation: Application traffic can still function.
+    text: 'The pod label and the namespace label `io.kubernetes.pod.namespace: outpost`.'
+    explanation: Correct. Without the namespace label, the selector matches the namespace
+      of the policy.
+  - id: d
+    text: The pod IP address.
+    explanation: Selectors use labels and identities.
   correct_option: c
-  explanation: Application traffic can still function.
+  explanation: Without the namespace label, the selector matches the namespace of
+    the policy.
+- id: ats055-final-q12
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Diagnose a Service without endpoints
+  source_readings:
+  - sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
+  prompt: The Service `hubble-ui` has no endpoints. Which check is cheapest and comes
+    first?
+  options:
+  - id: a
+    text: Reinstall Cilium.
+    explanation: Too large a step.
+  - id: b
+    text: Restart Hubble Relay.
+    explanation: Relay is not the cause of an empty list.
+  - id: c
+    text: Scale the agent DaemonSet.
+    explanation: The agent does not back the UI Service.
+  - id: d
+    text: Check the Endpoints object, then the replicas, the selector and the readiness.
+    explanation: Correct. Each cause is cheap to check in that order.
+  correct_option: d
+  explanation: Each cause is cheap to check in that order.
+- id: ats055-final-q13
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read the service map and find a dropped connection
+  source_readings:
+  - sections/section-030/module-02/course-02-read-the-service-map-and-the-flows-table.md
+  prompt: What does a missing line in the service map prove?
+  options:
+  - id: a
+    text: The connection is forbidden.
+    explanation: The map does not know policies.
+  - id: b
+    text: The destination is down.
+    explanation: A destination can be up without traffic.
+  - id: c
+    text: 'Nothing about policy: no flow for that pair was observed in the window.'
+    explanation: Correct. The map shows observed traffic, not allowed traffic.
+  - id: d
+    text: Relay is broken.
+    explanation: Not necessarily.
+  correct_option: c
+  explanation: The map shows observed traffic, not allowed traffic.

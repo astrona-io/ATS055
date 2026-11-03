@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Make DNS Requests Visible (LAB). UNTESTED: not run yet.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-055-lab-020-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    networking:
+      disableDefaultCNI: true
+      podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
+bootstrap:
+  init:
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: apply-solution
+    description: Apply the reference solution
+    type: file
+    source: solution/apply.sh
+validation:
+  scripts:
+  - name: dns-rule-present
+    description: "A policy for shuttle has a DNS rule on port 53 and still allows the probe on 8080"
+    type: file
+    source: validation/validate-dns-rule-present.sh
+    hint: "Select app=shuttle, send DNS to kube-dns with rules.dns, and allow egress to the probe."
+  - name: shuttle-reaches-probe
+    description: "shuttle still reaches the probe by name"
+    type: file
+    source: validation/validate-shuttle-reaches-probe.sh
+    hint: "The egress policy must allow both DNS and the probe on 8080."
+  - name: dns-flows-visible
+    description: "Hubble shows a DNS query from shuttle for the probe name"
+    type: file
+    source: validation/validate-dns-flows-visible.sh
+    hint: "Run hubble observe --type l7 --protocol dns after sending a request by name."
+teardown:
+  keepCluster: false

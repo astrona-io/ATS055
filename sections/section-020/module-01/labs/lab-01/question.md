@@ -1,31 +1,13 @@
----
-draft: true
-exam_objectives:
-- Enabling Layer 7 Protocol Visibility
----
-# Create L7 Visibility With An HTTP Policy
+# Question
 
-Generate two different HTTP verdicts for L7 observation.
+Solve this question on: `terminal`
 
-## Starting state
+The policy `probe-ingress` in `starfleet` lets `shuttle` reach the `probe` on TCP port 8080, but Hubble shows no HTTP details. The team wants to see each HTTP request and to allow only `GET /get`.
 
-Cilium manages the private two-node cluster. Hubble Relay and the BGP control plane are enabled. The probe and two clients are healthy; no learner policy or evidence report exists. This baseline uses kube-proxy and tunnelling.
+1. Change `probe-ingress` so that `shuttle` may send only `GET` requests to the path `/get` on port 8080. Keep `shuttle` as the only allowed source.
+2. Send `GET /get` and `GET /headers` from `shuttle` to `http://probe.starfleet:8080`.
+3. Confirm in Hubble that the `/get` request is forwarded and the `/headers` request is dropped, both as HTTP flows.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Do not touch the workloads.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-055-lab-020-01-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-055-lab-020-01-01" || exit 1
-node_name="astro-ats-055-lab-020-01-01-control-plane"
-worker_name="astro-ats-055-lab-020-01-01-worker"
-```
-
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
-
-## Required result
-
-Apply an L7 rule, exercise permitted and rejected HTTP paths, and inspect agent logs. L7 visibility requires the proxy observation point; TCP forwarding alone does not provide HTTP metadata.
-
-## Verify The Result
-
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+`kubectl` already points at the cluster as the cluster administrator.

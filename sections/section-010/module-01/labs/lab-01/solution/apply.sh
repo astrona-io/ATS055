@@ -1,12 +1,7 @@
 #!/usr/bin/env bash
+# Reference solution, applied only by `astrona test`.
 set -euo pipefail
-if [[ "$(kubectl config current-context)" != "kind-astro-ats-055-lab-010-01-01" ]]; then
-  printf 'Refusing to operate on another Kubernetes context\n' >&2
-  exit 1
-fi
-lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
-solution_directory="$lab_directory/solution"
-node_name="astro-ats-055-lab-010-01-01-control-plane"
-worker_name="astro-ats-055-lab-010-01-01-worker"
-
-python3 "$solution_directory/record.py"
+solution_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+kubectl -n starfleet exec shuttle -- curl -s -o /dev/null -m 5 -w "%{http_code}\n" http://probe.starfleet:8080/get
+kubectl -n outpost exec drifter -- curl -s -o /dev/null -m 5 -w "%{http_code}\n" http://probe.starfleet:8080/get || true
+kubectl -n starfleet create configmap flow-report --from-literal=forwarded-source=starfleet/shuttle --from-literal=dropped-source=outpost/drifter --from-literal='drop-reason=Policy denied' --from-literal=dropped-destination-port=8080 --dry-run=client -o yaml | kubectl apply -f -

@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
+# Reference solution, applied only by `astrona test`.
 set -euo pipefail
-if [[ "$(kubectl config current-context)" != "kind-astro-ats-055-lab-020-01-01" ]]; then
-  printf 'Refusing to operate on another Kubernetes context\n' >&2
-  exit 1
-fi
-lab_directory="$(cd "$(dirname "$0")/.." && pwd)"
-solution_directory="$lab_directory/solution"
-node_name="astro-ats-055-lab-020-01-01-control-plane"
-worker_name="astro-ats-055-lab-020-01-01-worker"
-
-kubectl apply -f "$solution_directory/ciliumnetworkpolicy-allow-shuttle.yaml"
+solution_directory="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cat > "$solution_directory/probe-ingress-http.yaml" <<'YAML'
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: probe-ingress
+  namespace: starfleet
+spec:
+  endpointSelector:
+    matchLabels:
+      app: probe
+  ingress:
+  - fromEndpoints:
+    - matchLabels:
+        app: shuttle
+    toPorts:
+    - ports:
+      - port: "8080"
+        protocol: TCP
+      rules:
+        http:
+        - method: GET
+          path: /get
+YAML
+kubectl apply -f "$solution_directory/probe-ingress-http.yaml"
+sleep 10

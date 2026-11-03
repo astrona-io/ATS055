@@ -1,34 +1,51 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Find The Dropped Client With The Hubble CLI (LAB). UNTESTED: not run yet.
 apiVersion: astrona.io/v1
 metadata:
-  name: ats-055-lab-030-01-01
+  name: ats-055-lab-030-01
   docs:
-    prerequisites: docs/prerequisites.md
-    examQuestion: question.md
-    caseStudy: docs/case-study.md
-    guide: solution.md
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
 runtime:
   type: kind
   kind:
     image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
-    nodes:
-      workers: 1
     networking:
       disableDefaultCNI: true
       podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
 bootstrap:
   init:
-  - name: seed-private-environment
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
     type: file
     source: bootstrap/setup.sh
-teardown:
-  keepCluster: false
 testing:
   init:
-  - name: reference-result
+  - name: apply-solution
+    description: Apply the reference solution
     type: file
     source: solution/apply.sh
 validation:
-  script:
-    name: verify-fields-and-live-evidence
+  scripts:
+  - name: cli-report-correct
+    description: "cli-report names the dropped source, destination, port and verdict"
     type: file
-    source: validate.sh
+    source: validation/validate-cli-report-correct.sh
+    hint: "Use namespace/pod for the source and destination."
+  - name: rogue-forwarded
+    description: "Requests from rogue to the probe are now forwarded"
+    type: file
+    source: validation/validate-rogue-forwarded.sh
+    hint: "Extend probe-ingress with a second source for app=rogue in namespace outpost, port 8080."
+  - name: drifter-still-denied
+    description: "drifter is still refused"
+    type: file
+    source: validation/validate-drifter-still-denied.sh
+    hint: "Allow only the pod labelled app=rogue, not the whole outpost namespace."
+teardown:
+  keepCluster: false

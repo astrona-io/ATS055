@@ -1,0 +1,245 @@
+# Knowledge check for section 020. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats055-020
+course_id: ATS055
+exam_code: CCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-020
+  title: Enabling Layer 7 Protocol Visibility
+questions:
+- id: ats055-020-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Distinguish layer 4 flows from layer 7 flows
+  source_readings:
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: Which component produces the HTTP request flows in Hubble?
+  options:
+  - id: a
+    text: The eBPF programs in the kernel.
+    explanation: They see addresses and ports only.
+  - id: b
+    text: The Envoy proxy inside the Cilium agent.
+    explanation: Correct. The proxy parses the application protocol and reports each
+      request.
+  - id: c
+    text: Hubble Relay.
+    explanation: Relay only merges flows.
+  - id: d
+    text: The CoreDNS pods.
+    explanation: They answer DNS and do not read HTTP.
+  correct_option: b
+  explanation: The proxy parses the application protocol and reports each request.
+- id: ats055-020-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Say what triggers the redirect to the proxy
+  source_readings:
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: What makes Cilium redirect the traffic of a pod to the proxy?
+  options:
+  - id: a
+    text: The setting `enable-hubble`.
+    explanation: It only turns on the Hubble server.
+  - id: b
+    text: A Service of type LoadBalancer.
+    explanation: A Service does not trigger the redirect.
+  - id: c
+    text: Installing Hubble Relay.
+    explanation: Relay does not touch the datapath.
+  - id: d
+    text: A policy with a layer 7 rule that selects the pod and port.
+    explanation: Correct. Visibility and enforcement are one feature.
+  correct_option: d
+  explanation: Visibility and enforcement are one feature.
+- id: ats055-020-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain why encrypted traffic shows no HTTP fields
+  source_readings:
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: A client calls an HTTPS endpoint, and Hubble shows DNS flows but no HTTP
+    flows. Why?
+  options:
+  - id: a
+    text: The content is encrypted, so the proxy cannot read the method or path.
+    explanation: Correct. Without TLS termination in the proxy, only layer 3 and 4
+      and DNS are visible.
+  - id: b
+    text: Hubble does not support port 443.
+    explanation: The port is not the limit; encryption is.
+  - id: c
+    text: The DNS proxy hides HTTP.
+    explanation: The two proxies are unrelated for HTTP.
+  - id: d
+    text: The policy is in audit mode.
+    explanation: Audit mode does not hide flows.
+  correct_option: a
+  explanation: Without TLS termination in the proxy, only layer 3 and 4 and DNS are
+    visible.
+- id: ats055-020-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain the order of the layer 4 and layer 7 checks
+  source_readings:
+  - sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
+  prompt: A source is not listed in `fromEndpoints`, but the HTTP rule would allow
+    its request. What happens?
+  options:
+  - id: a
+    text: The proxy allows the request.
+    explanation: The layer 4 check happens first.
+  - id: b
+    text: The proxy answers 403.
+    explanation: A 403 needs a connection that reached the proxy.
+  - id: c
+    text: The connection is dropped at layer 4 before the proxy sees it.
+    explanation: Correct. The HTTP entries only narrow what an allowed source may
+      do.
+  - id: d
+    text: Cilium switches to audit mode.
+    explanation: Audit mode is a separate setting.
+  correct_option: c
+  explanation: The HTTP entries only narrow what an allowed source may do.
+- id: ats055-020-q05
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a policy with an HTTP method and path rule
+  source_readings:
+  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  prompt: Where does an HTTP rule go in a `CiliumNetworkPolicy`?
+  options:
+  - id: a
+    text: Under `endpointSelector`.
+    explanation: The selector only chooses pods.
+  - id: b
+    text: In the `metadata` section.
+    explanation: Metadata holds names and labels.
+  - id: c
+    text: Under `toPorts`, in a `rules` block with the key `http`.
+    explanation: Correct. The rule belongs to the port.
+  - id: d
+    text: In the `cilium-config` ConfigMap.
+    explanation: The ConfigMap is for agent settings.
+  correct_option: c
+  explanation: The rule belongs to the port.
+- id: ats055-020-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Predict what a request that breaks the rule receives
+  source_readings:
+  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  prompt: A rule allows only `GET /get`. A client sends `GET /headers`. What does
+    the client receive?
+  options:
+  - id: a
+    text: An HTTP 403 answer from the proxy.
+    explanation: Correct. The proxy answers itself and the application never sees
+      the request.
+  - id: b
+    text: A connection timeout.
+    explanation: A timeout is typical for a layer 4 drop.
+  - id: c
+    text: HTTP 200 from the application.
+    explanation: The request is not allowed.
+  - id: d
+    text: HTTP 404 from the application.
+    explanation: The application never gets the request.
+  correct_option: a
+  explanation: The proxy answers itself and the application never sees the request.
+- id: ats055-020-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Filter Hubble output for HTTP flows and HTTP drops
+  source_readings:
+  - sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  prompt: Which command lists only dropped HTTP flows of the pod `probe`?
+  options:
+  - id: a
+    text: "`hubble observe --pod starfleet/probe --protocol tcp`"
+    explanation: That includes forwarded layer 4 flows.
+  - id: b
+    text: "`hubble status --protocol http`"
+    explanation: "`status` has no filters."
+  - id: c
+    text: "`hubble observe --encrypted`"
+    explanation: That filter selects encrypted flows.
+  - id: d
+    text: "`hubble observe --pod starfleet/probe --protocol http --verdict DROPPED`"
+    explanation: Correct. It combines a pod, protocol and verdict filter.
+  correct_option: d
+  explanation: It combines a pod, protocol and verdict filter.
+- id: ats055-020-q08
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain why DNS visibility needs an egress policy
+  source_readings:
+  - sections/section-020/module-02/course-01-how-dns-visibility-works.md
+  prompt: On which pod and in which direction do you attach a `dns` rule to see the
+    lookups of `shuttle`?
+  options:
+  - id: a
+    text: On the CoreDNS pods, in an ingress rule.
+    explanation: DNS visibility is attached to the client.
+  - id: b
+    text: On `shuttle`, in an egress rule.
+    explanation: Correct. The DNS proxy sits on the egress path of the client pod.
+  - id: c
+    text: On the `probe`, in an egress rule.
+    explanation: The `probe` does not do the lookups.
+  - id: d
+    text: On the node, in the ConfigMap.
+    explanation: The ConfigMap does not define DNS rules.
+  correct_option: b
+  explanation: The DNS proxy sits on the egress path of the client pod.
+- id: ats055-020-q09
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: State the side effect of an egress policy
+  source_readings:
+  - sections/section-020/module-02/course-02-write-a-dns-rule-and-read-dns-flows.md
+  prompt: You apply an egress policy for `shuttle` with only a DNS rule. What happens
+    to its connection to the `probe`?
+  options:
+  - id: a
+    text: It keeps working, because egress is open by default.
+    explanation: That is true only before a policy selects the pod.
+  - id: b
+    text: It is redirected to the DNS proxy.
+    explanation: Only port 53 is redirected.
+  - id: c
+    text: It is denied, because the policy now enforces egress and lists nothing else.
+    explanation: Correct. Once an egress policy selects a pod, only listed egress
+      is allowed.
+  - id: d
+    text: It becomes a layer 7 flow.
+    explanation: Without an HTTP rule it stays layer 4.
+  correct_option: c
+  explanation: Once an egress policy selects a pod, only listed egress is allowed.
+- id: ats055-020-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Write a DNS rule for UDP and TCP port 53
+  source_readings:
+  - sections/section-020/module-02/course-02-write-a-dns-rule-and-read-dns-flows.md
+  prompt: Which port list should a DNS rule use?
+  options:
+  - id: a
+    text: Port 53 for both UDP and TCP.
+    explanation: Correct. Large answers use TCP.
+  - id: b
+    text: Port 53 for UDP only.
+    explanation: TCP lookups would be blocked.
+  - id: c
+    text: Port 5353 for UDP.
+    explanation: That is multicast DNS.
+  - id: d
+    text: Ports 80 and 443.
+    explanation: Those are HTTP and HTTPS.
+  correct_option: a
+  explanation: Large answers use TCP.

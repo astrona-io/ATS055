@@ -1,41 +1,22 @@
----
-draft: true
-exam_objectives:
-- Enabling Layer 7 Protocol Visibility
----
-# Create L7 Visibility With An HTTP Policy Solution
+# Solution
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Solve this lab on `terminal`. Each step ends with a check you can run, and the whole task ends with `astrona submit`. The steps below were written from the documentation and have not been run yet.
+
+Start the lab if it is not running:
 
 ```sh
-export KUBECONFIG="$(astrona kubeconfig ats-055-lab-020-01-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-055-lab-020-01-01" || exit 1
-node_name="astro-ats-055-lab-020-01-01-control-plane"
-worker_name="astro-ats-055-lab-020-01-01-worker"
+astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-020/module-01/labs/lab-01
 ```
 
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
+## Step 1: Replace the policy
 
-## Inspect And Explain
-
-Cilium manages the private two-node cluster. Hubble Relay and the BGP control plane are enabled. The probe and two clients are healthy; no learner policy or evidence report exists. This baseline uses kube-proxy and tunnelling.
-
-Inspect the current objects before changing them:
-
-```sh
-kubectl -n starfleet get pods -o wide
-kubectl get nodes -o wide
-```
-
-Apply an L7 rule, exercise permitted and rejected HTTP paths, and inspect agent logs. L7 visibility requires the proxy observation point; TCP forwarding alone does not provide HTTP metadata.
-
-Save this as `ciliumnetworkpolicy-allow-shuttle.yaml`:
+Save this as `probe-ingress-http.yaml`. The `rules.http` block makes the Cilium agent send matching traffic through its Envoy proxy, which also makes it visible.
 
 ```yaml
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
-  name: allow-shuttle
+  name: probe-ingress
   namespace: starfleet
 spec:
   endpointSelector:
@@ -44,37 +25,44 @@ spec:
   ingress:
   - fromEndpoints:
     - matchLabels:
-        k8s:io.kubernetes.pod.namespace: starfleet
+        app: shuttle
     toPorts:
     - ports:
-      - port: '8080'
+      - port: "8080"
         protocol: TCP
       rules:
         http:
         - method: GET
-          path: /public
+          path: /get
 ```
 
-Apply the scoped correction:
+## Step 2: Apply it
+
+Apply the file.
 
 ```sh
-kubectl apply -f ciliumnetworkpolicy-allow-shuttle.yaml
+kubectl apply -f probe-ingress-http.yaml
 ```
 
-## Verify The Result
+## Step 3: Send both requests
 
-Observe the actual result. A denied request returns a nonzero status when the denial works, so run it separately from a shell sequence that stops on error. Status convergence and a successful request establish different parts of the result.
+The first request matches the rule. The second one does not.
 
 ```sh
-kubectl -n starfleet exec shuttle -- python -c 'import urllib.request; print(urllib.request.urlopen('"'"'http://probe:8080/public'"'"',timeout=4).read().decode())'
-kubectl -n starfleet exec shuttle -- python -c 'import urllib.request; print(urllib.request.urlopen('"'"'http://probe:8080/private'"'"',timeout=4).read().decode())'
+kubectl -n starfleet exec shuttle -- curl -s -o /dev/null -w "%{http_code}\n" http://probe.starfleet:8080/get
+kubectl -n starfleet exec shuttle -- curl -s -o /dev/null -w "%{http_code}\n" http://probe.starfleet:8080/headers
 ```
 
-Generate two different HTTP verdicts for L7 observation. The commands above deliberately target one environment. Keep its remaining components available so an unrelated failure cannot stand in for the required denial or correction. No example command output is presented as evidence of a completed run. A matching field alone does not establish that a process used it or that a controller reconciled it.
+## Step 4: Read the HTTP flows
 
-After recording your result, remove the independent lab with `astrona destroy ats-055-lab-020-01-01`.
+Filter for Layer 7 flows of the HTTP protocol.
 
-## Common pitfalls
+```sh
+kubectl -n kube-system exec ds/cilium -c cilium-agent -- hubble observe --type l7 --protocol http --from-pod starfleet/shuttle --last 20
+```
 
-> [!WARNING]
-> Confirm the private context and exact node names before a change. Check the stated scope and live result. Do not change unrelated components to hide the original fault.
+## Submit
+
+```sh
+astrona submit --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-020/module-01/labs/lab-01
+```

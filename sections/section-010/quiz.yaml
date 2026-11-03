@@ -1,0 +1,257 @@
+# Knowledge check for section 010. Listed in astrona.yaml as a `type: quiz` entry after the capstone lab.
+schema_version: 1
+kind: question_bank
+id: ats055-010
+course_id: ATS055
+exam_code: CCA
+status: draft
+provenance: Original practice material written for this course; not official exam
+  questions.
+scope:
+  type: section
+  id: section-010
+  title: Understand the Observability Capabilities of Hubble
+questions:
+- id: ats055-010-q01
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Name the Hubble components and where flows are stored
+  source_readings:
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: On a node, which component turns datapath events into flows and stores the
+    most recent ones?
+  options:
+  - id: a
+    text: Hubble Relay, in a database on the control plane.
+    explanation: Relay joins the flows of many nodes and does not store them.
+  - id: b
+    text: The Hubble server inside the Cilium agent, in an in-memory ring buffer.
+    explanation: Correct. The Hubble server in the agent builds flows from the kernel
+      events and keeps them in a fixed-size ring buffer in memory.
+  - id: c
+    text: The Hubble UI, in a file on the node.
+    explanation: The UI only draws flows that it reads from Relay.
+  - id: d
+    text: The Cilium operator, in a ConfigMap.
+    explanation: The operator does not create or store flows.
+  correct_option: b
+  explanation: The Hubble server in the agent builds flows from the kernel events
+    and keeps them in a fixed-size ring buffer in memory.
+- id: ats055-010-q02
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Explain the scope of the Hubble CLI inside the agent pod and
+    through Relay
+  source_readings:
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: A cluster has three nodes. You run `hubble observe` inside one agent pod.
+    What do you see?
+  options:
+  - id: a
+    text: The flows of all three nodes, because the agent knows the cluster.
+    explanation: Only Relay merges the nodes.
+  - id: b
+    text: Only the flows of the namespace `kube-system`.
+    explanation: The scope is a node, not a namespace.
+  - id: c
+    text: No flows, because the CLI needs Relay.
+    explanation: The CLI works against the local socket without Relay.
+  - id: d
+    text: Only the flows of the node that the agent runs on.
+    explanation: Correct. The command talks to the local Hubble server over its Unix
+      socket, so its scope is one node.
+  correct_option: d
+  explanation: The command talks to the local Hubble server over its Unix socket,
+    so its scope is one node.
+- id: ats055-010-q03
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Enable Hubble Relay and check that it is healthy
+  source_readings:
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: Cilium is installed with Helm and Hubble is on, but no `hubble-relay` Deployment
+    exists. Which Helm value creates it?
+  options:
+  - id: a
+    text: "`hubble.relay.enabled=true`"
+    explanation: Correct. Relay has its own switch, and it is off by default even
+      when Hubble is on.
+  - id: b
+    text: "`hubble.enabled=true`"
+    explanation: That is already set and enables the Hubble server only.
+  - id: c
+    text: "`hubble.ui.enabled=true`"
+    explanation: That enables the UI, which also needs Relay, but it is not the Relay
+      switch.
+  - id: d
+    text: "`hubble.metrics.enabled=true`"
+    explanation: That enables metrics, not Relay.
+  correct_option: a
+  explanation: Relay has its own switch, and it is off by default even when Hubble
+    is on.
+- id: ats055-010-q04
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Read the health and fill level of the flow buffer
+  source_readings:
+  - sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
+  prompt: 'In `hubble status` through Relay, the line `Connected Nodes: 2/3` appears.
+    What does it mean?'
+  options:
+  - id: a
+    text: All three nodes are healthy and one has no flows.
+    explanation: The count is about connections, not about flows.
+  - id: b
+    text: The buffer is 67 percent full.
+    explanation: The fill level is shown in the line `Current/Max Flows`.
+  - id: c
+    text: Relay cannot reach one node, so that node's flows are missing from every
+      list.
+    explanation: Correct. Relay merges only the nodes it is connected to.
+  - id: d
+    text: Hubble is disabled on two nodes.
+    explanation: A disabled node is not the same as a connection that Relay cannot
+      make.
+  correct_option: c
+  explanation: Relay merges only the nodes it is connected to.
+- id: ats055-010-q05
+  type: single_choice
+  difficulty: beginner
+  learning_objective: Read the source, destination and verdict of a flow
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: A flow line ends with `to-stack FORWARDED`. What does `FORWARDED` tell you?
+  options:
+  - id: a
+    text: The server returned a successful HTTP response.
+    explanation: Layer 3 and 4 flows do not carry HTTP status codes.
+  - id: b
+    text: The client received the reply.
+    explanation: A reply has its own flows.
+  - id: c
+    text: The datapath let the packet pass; it does not tell you whether the application
+      answered.
+    explanation: Correct. A verdict describes the datapath decision, not the application
+      result.
+  - id: d
+    text: No policy applies to the traffic.
+    explanation: Forwarded traffic can be allowed by a policy.
+  correct_option: c
+  explanation: A verdict describes the datapath decision, not the application result.
+- id: ats055-010-q06
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Tell a forwarded flow from a dropped flow and name the drop
+    reason
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: Which command shows only the dropped flows of the last two minutes?
+  options:
+  - id: a
+    text: "`hubble observe --verdict DROPPED --since 2m`"
+    explanation: Correct. The verdict filter selects dropped flows and `--since` limits
+      the time window.
+  - id: b
+    text: "`hubble observe --reply --since 2m`"
+    explanation: "`--reply` selects reply packets, not drops."
+  - id: c
+    text: "`hubble observe --type drop --last 2m`"
+    explanation: "`--last` takes a number of flows, not a duration."
+  - id: d
+    text: "`hubble status --verdict DROPPED`"
+    explanation: "`status` has no verdict filter."
+  correct_option: a
+  explanation: The verdict filter selects dropped flows and `--since` limits the time
+    window.
+- id: ats055-010-q07
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Interpret verdicts without overclaiming application success
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: The `probe` is reached by `shuttle` with `FORWARDED` flows, yet users report
+    HTTP 500 errors. What is the correct conclusion?
+  options:
+  - id: a
+    text: Hubble is wrong, because forwarded flows cannot exist with errors.
+    explanation: Both can be true at the same time.
+  - id: b
+    text: A policy drops the replies.
+    explanation: Dropped replies would show `DROPPED` flows.
+  - id: c
+    text: The ring buffer is too small.
+    explanation: Buffer size does not cause HTTP errors.
+  - id: d
+    text: The datapath is not the cause; the application returned the errors, and
+      only a layer 7 flow could show the status.
+    explanation: Correct. Layer 3 and 4 flows cannot show the HTTP status.
+  correct_option: d
+  explanation: Layer 3 and 4 flows cannot show the HTTP status.
+- id: ats055-010-q08
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Explain what the field is_reply and the reply filters select
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: What does `hubble observe --reply` select?
+  options:
+  - id: a
+    text: Flows that were dropped by a policy.
+    explanation: That is the verdict filter.
+  - id: b
+    text: Flows that belong to the reply direction of a connection.
+    explanation: Correct. The `is_reply` field marks packets that answer a connection.
+  - id: c
+    text: Flows with layer 7 data.
+    explanation: That is the type filter.
+  - id: d
+    text: Flows from the control plane only.
+    explanation: There is no such filter.
+  correct_option: b
+  explanation: The `is_reply` field marks packets that answer a connection.
+- id: ats055-010-q09
+  type: single_choice
+  difficulty: advanced
+  learning_objective: Account for absent observations
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: You expect a flow but `hubble observe` shows nothing. Which cause is NOT
+    valid?
+  options:
+  - id: a
+    text: The event already left the ring buffer.
+    explanation: This is common on busy nodes.
+  - id: b
+    text: The client is connected to another node.
+    explanation: An agent shows only its own node.
+  - id: c
+    text: The traffic cannot exist, because Hubble sees all traffic forever.
+    explanation: Correct. Hubble keeps only recent flows per node, so absence proves
+      little.
+  - id: d
+    text: A filter excluded the flow.
+    explanation: A wrong pod name matches nothing.
+  correct_option: c
+  explanation: Hubble keeps only recent flows per node, so absence proves little.
+- id: ats055-010-q10
+  type: single_choice
+  difficulty: intermediate
+  learning_objective: Name the fields of a flow
+  source_readings:
+  - sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  prompt: Which field of a flow states the reason when the verdict is a drop?
+  options:
+  - id: a
+    text: "`drop_reason_desc`"
+    explanation: Correct. It exists only when the verdict is a drop.
+  - id: b
+    text: "`traffic_direction`"
+    explanation: It states ingress or egress.
+  - id: c
+    text: "`is_reply`"
+    explanation: It marks reply packets.
+  - id: d
+    text: "`Summary`"
+    explanation: It is a short text, for example the TCP flags.
+  correct_option: a
+  explanation: It exists only when the verdict is a drop.

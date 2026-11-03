@@ -1,0 +1,66 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Layer 7 Visibility For HTTP And DNS (LAB). UNTESTED: not run yet.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-055-lab-020-cap
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    networking:
+      disableDefaultCNI: true
+      podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
+bootstrap:
+  init:
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: apply-solution
+    description: Apply the reference solution
+    type: file
+    source: solution/apply.sh
+validation:
+  scripts:
+  - name: http-rule-present
+    description: "The probe policy has an HTTP rule for GET /get from shuttle only"
+    type: file
+    source: validation/validate-http-rule-present.sh
+    hint: "Add rules.http with method GET and path /get under toPorts."
+  - name: dns-rule-present
+    description: "A policy for shuttle has a DNS rule on port 53 and still allows the probe on 8080"
+    type: file
+    source: validation/validate-dns-rule-present.sh
+    hint: "Select app=shuttle, send DNS to kube-dns with rules.dns, and allow egress to the probe."
+  - name: http-behaviour
+    description: "GET /get from shuttle returns 200, GET /headers returns 403, drifter is refused"
+    type: file
+    source: validation/validate-http-behaviour.sh
+    hint: "The rule must allow only GET /get. A request that breaks the rule gets 403 from the proxy."
+  - name: http-flows-visible
+    description: "Hubble shows the HTTP request GET /get as forwarded and /headers as dropped"
+    type: file
+    source: validation/validate-http-flows-visible.sh
+    hint: "Send both requests from shuttle, then run hubble observe --type l7 --protocol http."
+  - name: dns-flows-visible
+    description: "Hubble shows a DNS query from shuttle for the probe name"
+    type: file
+    source: validation/validate-dns-flows-visible.sh
+    hint: "Run hubble observe --type l7 --protocol dns after sending a request by name."
+  - name: http-metric-exposed
+    description: "The agent exposes hubble_http_requests_total"
+    type: file
+    source: validation/validate-http-metric-exposed.sh
+    hint: "Enable httpV2 and the metrics server on :9965, restart the agents, then send requests."
+teardown:
+  keepCluster: false

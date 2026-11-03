@@ -1,17 +1,42 @@
----
-draft: true
-exam_objectives:
-- Understand the Observability Capabilities of Hubble
----
-# Understand the Observability Capabilities of Hubble
+# Section 010: Understand the Observability Capabilities of Hubble
 
-This section covers understand the Observability Capabilities of Hubble. It develops flow Evidence, Verdicts And Observation Scope through mechanisms, examples, prerequisites and failure reasoning.
+This section teaches what Hubble records and how long it keeps it. A flow is one record of one network event, and Hubble is the part of Cilium that stores and serves those records. You learn which component creates a flow, which component joins the flows of many nodes, how to read a single flow and its verdict, how to count events with metrics and how to size the buffer that holds the flows.
 
-Read the module goals, teaching and closing summary in order. YAML checks are indexed separately and appear after designated summaries. Larger domains include an intermediate checkpoint before the final review.
+**Curriculum item covered:** Understand the Observability Capabilities of Hubble
+
+---
 
 ## Learning Outcomes
 
-- Explain the information in supported Hubble flow records.
-- Distinguish local server scope from Relay aggregation.
+- Explain which component creates, stores and serves flows: the Hubble server in the Cilium agent, Hubble Relay, the command-line tool and the UI.
+- Distinguish the scope of one agent from the scope of Relay.
+- Read the source, destination, direction, verdict and drop reason of a flow.
 - Interpret forwarded and dropped verdicts without overclaiming application success.
-- Account for buffers, filters and absent observations.
+- Enable Hubble metrics and read the drop counter from the metrics endpoint.
+- Size the flow buffer with a valid capacity and explain what a restart removes.
+
+---
+
+## The Learning Path
+
+### 1. Hubble Components And Flow Records
+*   **Module Reader:** **[Module 1: Hubble Components And Flow Records](./module-01/course.md)**
+*   **Hands-on Playground:** `sections/section-010/module-01/playground` - kind cluster with Cilium, Hubble and Hubble Relay. Namespaces `starfleet` and `outpost`, the `probe` Service on port 8080, the clients `shuttle`, `drifter` and `rogue`, and the policy `probe-ingress`.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-010/module-01/playground
+    ```
+
+### 2. Hubble Metrics And Flow Buffer Sizing
+*   **Module Reader:** **[Module 2: Hubble Metrics And Flow Buffer Sizing](./module-02/course.md)**
+*   **Hands-on Playground:** `sections/section-010/module-02/playground` - the same cluster with Hubble metrics off and the default flow buffer.
+    ```bash
+    astrona run --git ssh://git@github.com/astrona-io/ATS055.git -c sections/section-010/module-02/playground
+    ```
+
+### Capstone
+*   **Lab:** `sections/section-010/capstone/labs/lab-01` - observe dropped traffic end to end: metrics, a larger buffer and a report of the drop.
+
+### Knowledge check
+*   `sections/section-010/quiz.yaml` - ten questions on this section.
+
+All graded labs are UNTESTED. They passed static checks only.

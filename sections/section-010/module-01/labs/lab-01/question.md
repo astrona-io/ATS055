@@ -1,35 +1,13 @@
----
-draft: true
-exam_objectives:
-- Understand the Observability Capabilities of Hubble
----
-# Find The Flow Observation Components
+# Question
 
-Verify the relay service and ready deployment.
+Solve this question on: `terminal`
 
-## Starting state
+The `probe` Service in `starfleet` is protected by the policy `probe-ingress`. Two clients call it: the pod `shuttle` in `starfleet` and the pod `drifter` in `outpost`. Use Hubble to find out what the network did with each request.
 
-Cilium manages the private two-node cluster. Hubble Relay and the BGP control plane are enabled. The probe and two clients are healthy; no learner policy or evidence report exists. This baseline uses kube-proxy and tunnelling.
+1. From `shuttle`, send one request to `http://probe.starfleet:8080/get`. From `drifter`, send one request to the same address.
+2. Find both flows with `hubble observe` and read the verdict, the source and the drop reason.
+3. Create the ConfigMap `flow-report` in `starfleet` with these keys: `forwarded-source` (namespace/pod of the client whose request was forwarded), `dropped-source` (namespace/pod of the client whose request was dropped), `drop-reason` (the reason Hubble shows for the drop) and `dropped-destination-port`.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
+Do not change the policy or the workloads. The grader reads Hubble again, so the report must match the real flows.
 
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-055-lab-010-01-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-055-lab-010-01-01" || exit 1
-node_name="astro-ats-055-lab-010-01-01-control-plane"
-worker_name="astro-ats-055-lab-010-01-01-worker"
-```
-
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
-
-## Required result
-
-Verify relay readiness and inspect the agent observer configuration. Hubble flow visibility has a retention and namespace scope; an absent flow is not proof of absent traffic.
-
-Record observations in `starfleet/evidence`, whose `report.json` contains the stated report. The verifier reads the live API again; invented values do not pass.
-
-The report object uses these fields: `image`, `service_ports`, `selector`. Keep numeric values numeric and preserve arrays and nested objects returned by the API.
-
-## Verify The Result
-
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+`kubectl` already points at the cluster as the cluster administrator.

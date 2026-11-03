@@ -1,9 +1,13 @@
+# Course manifest for ATS055 - Network Observability (Cilium Certified Associate).
+# Every path is relative to this file. Playgrounds are not listed: the landing page marker shows them.
 training:
   id: ATS055
   title: 'CCA: Network Observability'
-  description: 'Detailed reading material and reusable YAML knowledge checks for CCA:
-    Network Observability. Technical content remains draft. Private playgrounds and
-    draft independent labs are included.'
+  description: 'Training material covering the Cilium Certified Associate (CCA) Network
+    Observability domain: what Hubble records and how long it keeps it, layer 7 visibility
+    for HTTP and DNS, and using the Hubble command line and the Hubble UI. Each module
+    pairs developed reading with an ungraded playground and a graded lab. Each section
+    closes with a capstone lab and a knowledge check. All labs are untested drafts.'
   certification:
     name: Cilium Certified Associate
     code: CCA
@@ -33,135 +37,339 @@ modules:
     path: sections/intro/course-03-how-this-course-is-made.md
 - id: module-010
   title: Understand the Observability Capabilities of Hubble
-  description: Developed reading and reasoning for Understand the Observability Capabilities
-    of Hubble.
-  maturity: alpha
+  description: Makes the reader able to say what Hubble records, where flows are stored,
+    how to read a flow and its verdict, and how to count events and size the flow
+    buffer.
+  status: alpha
   content:
   - type: reading
     title: Understand the Observability Capabilities of Hubble
     path: sections/section-010/README.md
   - type: reading
-    title: Flow Evidence, Verdicts And Observation Scope
+    title: Hubble Components And Flow Records
     path: sections/section-010/module-01/course.md
   - type: reading
-    title: Flow Evidence, Verdicts And Observation Scope
-    path: sections/section-010/module-01/course-01-flow-evidence-verdicts-and-observation-scope.md
+    title: Hubble Components And Where Flows Come From
+    path: sections/section-010/module-01/course-01-hubble-components-and-where-flows-come-from.md
   - type: reading
-    title: Find The Flow Observation Components — Task
+    title: Reading A Flow Record And Its Verdict
+    path: sections/section-010/module-01/course-02-reading-a-flow-record-and-its-verdict.md
+  - type: reading
+    title: Question
     path: sections/section-010/module-01/labs/lab-01/question.md
   - type: lab
-    title: Find The Flow Observation Components
+    title: Read Forwarded And Dropped Flows
     path: sections/section-010/module-01/labs/lab-01
     difficulty: intermediate
     estimated_duration: 25m
-    topic: cilium-diagnostics
-    task_kind: build
-    learning_goals:
-    - Verify the relay service and ready deployment.
+    topic: hubble-flows
+    task_kind: troubleshooting
     tags:
-    - cca
-    - cilium-diagnostics
-  - type: reading
-    title: Find The Flow Observation Components — Solution
-    path: sections/section-010/module-01/labs/lab-01/solution.md
-  - type: reading
-    title: 'Guided Practice: Find The Flow Observation Components'
-    path: sections/section-010/module-01/course-02-guided-practice.md
+    - hubble
+    - flow
+    - verdict
+    - drop
+    - cilium-network-policy
+    learning_goals:
+    - Find a forwarded and a dropped flow with hubble observe
+    - Report the source, destination, port and drop reason of a dropped flow
+    - Keep the policy unchanged
+    resources:
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
     title: Summary
     path: sections/section-010/module-01/course-03-summary.md
+  - type: reading
+    title: Hubble Metrics And Flow Buffer Sizing
+    path: sections/section-010/module-02/course.md
+  - type: reading
+    title: Enable And Read Hubble Metrics
+    path: sections/section-010/module-02/course-01-enable-and-read-hubble-metrics.md
+  - type: reading
+    title: Size The Flow Buffer
+    path: sections/section-010/module-02/course-02-size-the-flow-buffer.md
+  - type: reading
+    title: Question
+    path: sections/section-010/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Enable Hubble Drop Metrics And Resize The Flow Buffer
+    path: sections/section-010/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-metrics
+    task_kind: build
+    tags:
+    - hubble
+    - metrics
+    - hubble-metrics
+    - buffer
+    - cilium-config
+    learning_goals:
+    - Enable the drop and flow metrics on port 9965
+    - Set the flow buffer capacity to 8191
+    - Restart the agents and read the drop metric
+    resources:
+    - name: Cilium metrics
+      url: https://docs.cilium.io/en/stable/observability/metrics/
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: reading
+    title: Summary
+    path: sections/section-010/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-010/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Observe Dropped Traffic End To End
+    path: sections/section-010/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 45m
+    topic: hubble-observability
+    task_kind: build
+    tags:
+    - hubble
+    - metrics
+    - buffer
+    - drop
+    - flow
+    - report
+    learning_goals:
+    - Enable metrics and a larger flow buffer
+    - Find the dropped traffic in Hubble and report it
+    - Read the drop metric from the agent
+    resources:
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+    - name: Cilium metrics
+      url: https://docs.cilium.io/en/stable/observability/metrics/
+  - type: quiz
+    title: 'Knowledge Check: Understand the Observability Capabilities of Hubble'
+    path: sections/section-010/quiz.yaml
+    pass_score: 70
 - id: module-020
   title: Enabling Layer 7 Protocol Visibility
-  description: Developed reading and reasoning for Enabling Layer 7 Protocol Visibility.
-  maturity: alpha
+  description: Makes the reader able to turn on HTTP and DNS visibility with Cilium
+    network policy, predict what the policy does to traffic and read layer 7 flows.
+  status: alpha
   content:
   - type: reading
     title: Enabling Layer 7 Protocol Visibility
     path: sections/section-020/README.md
   - type: reading
-    title: Making Application Protocols Visible To Hubble
+    title: HTTP Visibility With Layer 7 Policy
     path: sections/section-020/module-01/course.md
   - type: reading
-    title: Making Application Protocols Visible To Hubble
-    path: sections/section-020/module-01/course-01-making-application-protocols-visible-to-hubble.md
+    title: How Layer 7 Visibility Works
+    path: sections/section-020/module-01/course-01-how-layer-7-visibility-works.md
   - type: reading
-    title: Create L7 Visibility With An HTTP Policy — Task
+    title: Write HTTP Rules And Read HTTP Flows
+    path: sections/section-020/module-01/course-02-write-http-rules-and-read-http-flows.md
+  - type: reading
+    title: Question
     path: sections/section-020/module-01/labs/lab-01/question.md
   - type: lab
-    title: Create L7 Visibility With An HTTP Policy
+    title: Add HTTP Visibility With A Policy
     path: sections/section-020/module-01/labs/lab-01
     difficulty: intermediate
     estimated_duration: 25m
-    topic: hubble-l7-prerequisite
+    topic: l7-visibility
     task_kind: build
-    learning_goals:
-    - Generate two different HTTP verdicts for L7 observation.
     tags:
-    - cca
-    - hubble-l7-prerequisite
-  - type: reading
-    title: Create L7 Visibility With An HTTP Policy — Solution
-    path: sections/section-020/module-01/labs/lab-01/solution.md
-  - type: reading
-    title: Record A Real HTTP Flow From Hubble Relay — Task
-    path: sections/section-020/module-01/labs/lab-02/question.md
-  - type: lab
-    title: Record A Real HTTP Flow From Hubble Relay
-    path: sections/section-020/module-01/labs/lab-02
-    difficulty: intermediate
-    estimated_duration: 25m
-    topic: hubble-http-flow
-    task_kind: build
+    - cilium-network-policy
+    - http
+    - envoy
+    - hubble
+    - l7
     learning_goals:
-    - Observe an HTTP response through Relay and verify it against the live flow window.
-    tags:
-    - cca
-    - hubble-http-flow
-  - type: reading
-    title: Record A Real HTTP Flow From Hubble Relay — Solution
-    path: sections/section-020/module-01/labs/lab-02/solution.md
-  - type: reading
-    title: 'Guided Practice: Create L7 Visibility With An HTTP Policy'
-    path: sections/section-020/module-01/course-02-guided-practice.md
+    - Add an HTTP method and path rule to an ingress policy
+    - Confirm the allowed and the denied request
+    - Find both as HTTP flows in Hubble
+    resources:
+    - name: Layer 7 protocol visibility
+      url: https://docs.cilium.io/en/stable/observability/visibility/
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
     title: Summary
     path: sections/section-020/module-01/course-03-summary.md
+  - type: reading
+    title: DNS Visibility And Protocol Limits
+    path: sections/section-020/module-02/course.md
+  - type: reading
+    title: How DNS Visibility Works
+    path: sections/section-020/module-02/course-01-how-dns-visibility-works.md
+  - type: reading
+    title: Write A DNS Rule And Read DNS Flows
+    path: sections/section-020/module-02/course-02-write-a-dns-rule-and-read-dns-flows.md
+  - type: reading
+    title: Question
+    path: sections/section-020/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Make DNS Requests Visible
+    path: sections/section-020/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: l7-visibility
+    task_kind: build
+    tags:
+    - cilium-network-policy
+    - dns
+    - dns-proxy
+    - hubble
+    - egress
+    learning_goals:
+    - Write an egress policy with a DNS rule for UDP and TCP port 53
+    - Keep the connection to the probe working
+    - Find the DNS query in Hubble
+    resources:
+    - name: Layer 7 protocol visibility
+      url: https://docs.cilium.io/en/stable/observability/visibility/
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: reading
+    title: Summary
+    path: sections/section-020/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-020/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Layer 7 Visibility For HTTP And DNS
+    path: sections/section-020/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 45m
+    topic: l7-visibility
+    task_kind: build
+    tags:
+    - cilium-network-policy
+    - http
+    - dns
+    - httpV2
+    - hubble
+    learning_goals:
+    - Make HTTP and DNS traffic visible with policy
+    - Keep the allowed traffic working
+    - Read the HTTP metric from the agent
+    resources:
+    - name: Layer 7 protocol visibility
+      url: https://docs.cilium.io/en/stable/observability/visibility/
+    - name: Cilium metrics
+      url: https://docs.cilium.io/en/stable/observability/metrics/
+  - type: quiz
+    title: 'Knowledge Check: Enabling Layer 7 Protocol Visibility'
+    path: sections/section-020/quiz.yaml
+    pass_score: 70
 - id: module-030
   title: Know How to Use Hubble from the Command Line or the Hubble UI
-  description: Developed reading and reasoning for Know How to Use Hubble from the
-    Command Line or the Hubble UI.
-  maturity: alpha
+  description: Makes the reader able to use the Hubble command line and the Hubble
+    UI to find dropped traffic, repair the UI Service and read the service map.
+  status: alpha
   content:
   - type: reading
     title: Know How to Use Hubble from the Command Line or the Hubble UI
     path: sections/section-030/README.md
   - type: reading
-    title: Interpreting Hubble CLI And UI Views
+    title: Using The Hubble Command Line
     path: sections/section-030/module-01/course.md
   - type: reading
-    title: Interpreting Hubble CLI And UI Views
-    path: sections/section-030/module-01/course-01-interpreting-hubble-cli-and-ui-views.md
+    title: Connect The Hubble CLI And Observe Flows
+    path: sections/section-030/module-01/course-01-connect-the-hubble-cli-and-observe-flows.md
   - type: reading
-    title: Discover The Relay Service For Hubble CLI — Task
+    title: Filter Flows To Find A Dropped Client
+    path: sections/section-030/module-01/course-02-filter-flows-to-find-a-dropped-client.md
+  - type: reading
+    title: Question
     path: sections/section-030/module-01/labs/lab-01/question.md
   - type: lab
-    title: Discover The Relay Service For Hubble CLI
+    title: Find The Dropped Client With The Hubble CLI
     path: sections/section-030/module-01/labs/lab-01
     difficulty: intermediate
     estimated_duration: 25m
-    topic: cilium-diagnostics
-    task_kind: build
-    learning_goals:
-    - Verify the relay service and ready deployment.
+    topic: hubble-cli
+    task_kind: troubleshooting
     tags:
-    - cca
-    - cilium-diagnostics
-  - type: reading
-    title: Discover The Relay Service For Hubble CLI — Solution
-    path: sections/section-030/module-01/labs/lab-01/solution.md
-  - type: reading
-    title: 'Guided Practice: Discover The Relay Service For Hubble CLI'
-    path: sections/section-030/module-01/course-02-guided-practice.md
+    - hubble
+    - hubble-observe
+    - filters
+    - cilium-network-policy
+    learning_goals:
+    - Find the source, destination, port and verdict of dropped traffic
+    - Record them in a ConfigMap
+    - Allow one workload without allowing others
+    resources:
+    - name: Hubble command line
+      url: https://docs.cilium.io/en/stable/observability/hubble/hubble-cli/
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
   - type: reading
     title: Summary
     path: sections/section-030/module-01/course-03-summary.md
+  - type: reading
+    title: Using The Hubble UI
+    path: sections/section-030/module-02/course.md
+  - type: reading
+    title: Hubble UI Components And Access
+    path: sections/section-030/module-02/course-01-hubble-ui-components-and-access.md
+  - type: reading
+    title: Read The Service Map And The Flows Table
+    path: sections/section-030/module-02/course-02-read-the-service-map-and-the-flows-table.md
+  - type: reading
+    title: Question
+    path: sections/section-030/module-02/labs/lab-01/question.md
+  - type: lab
+    title: Repair The Hubble UI
+    path: sections/section-030/module-02/labs/lab-01
+    difficulty: intermediate
+    estimated_duration: 25m
+    topic: hubble-ui
+    task_kind: troubleshooting
+    tags:
+    - hubble-ui
+    - service
+    - endpoints
+    - selector
+    learning_goals:
+    - Find why the hubble-ui Service has no endpoint
+    - Repair the Service and the Deployment
+    - Report the dropped edge and the namespaces of the service map
+    resources:
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: reading
+    title: Summary
+    path: sections/section-030/module-02/course-03-summary.md
+  - type: reading
+    title: Question
+    path: sections/section-030/capstone/labs/lab-01/question.md
+  - type: lab
+    title: Use The Hubble CLI And UI Together
+    path: sections/section-030/capstone/labs/lab-01
+    difficulty: advanced
+    estimated_duration: 45m
+    topic: hubble-cli-ui
+    task_kind: troubleshooting
+    tags:
+    - hubble
+    - hubble-ui
+    - hubble-observe
+    - service
+    - report
+    learning_goals:
+    - Repair the Hubble UI
+    - Report the dropped client from the command line and the dropped edge from the
+      map
+    - Allow the dropped client
+    resources:
+    - name: Hubble command line
+      url: https://docs.cilium.io/en/stable/observability/hubble/hubble-cli/
+    - name: Hubble documentation
+      url: https://docs.cilium.io/en/stable/observability/hubble/
+  - type: quiz
+    title: 'Knowledge Check: Know How to Use Hubble from the Command Line or the Hubble
+      UI'
+    path: sections/section-030/quiz.yaml
+    pass_score: 70
+  - type: quiz
+    title: 'Final Knowledge Check: Network Observability'
+    path: sections/final-domain-quiz.yaml
+    pass_score: 70

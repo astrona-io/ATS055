@@ -5,10 +5,7 @@ version 1 and the contract in `schemas/question-bank.schema.json`. This is an
 authoring format for future application integration, not an existing Astrona
 quiz API. No YAML question file is registered as a Markdown reading.
 
-Banks follow their declared module summaries. Larger domains use an intermediate
-checkpoint after the third section and a final domain review; smaller domains
-use a final domain review. The index records covered sections and teaching order. Banks contain 5–15 original single-choice
-questions, scoped to concepts taught in the course. They remain draft for review.
+Each section has a quiz.yaml listed in astrona.yaml as a type: quiz entry after the capstone lab (pass_score 70), and sections/final-domain-quiz.yaml closes the course. Banks contain original single-choice questions scoped to concepts taught in the course. They remain draft for review.
 
 ## Fields And Rendering
 
@@ -29,3 +26,14 @@ ID, not display position, so a later renderer can shuffle choices safely.
 
 The banks contain answer keys and are public learning material, so this is not
 a secure examination bank. Do not treat scores as an official CCA result.
+
+## Hands-On Coverage
+
+This course has 3 ungraded playgrounds and 4 independent draft labs. Tasks, launch entries and solutions follow their teaching reading. Guided practice precedes the summary. Static and offline checks are separate from live execution, which remains pending.
+
+| Module | Labs in reading order |
+| --- | --- |
+| 010/01 | Find The Flow Observation Components |
+| 020/01 | Create L7 Visibility With An HTTP Policy |
+| 020/01 | Record A Real HTTP Flow From Hubble Relay |
+| 030/01 | Discover The Relay Service For Hubble CLI |

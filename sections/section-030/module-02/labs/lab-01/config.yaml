@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://cli.astrona.io/schema/lab-config.schema.json
+#
+# Repair The Hubble UI (LAB). UNTESTED: not run yet.
+apiVersion: astrona.io/v1
+metadata:
+  name: ats-055-lab-030-02
+  docs:
+    prerequisites: prerequisites.md
+    question: question.md
+    solution: solution.md
+runtime:
+  type: kind
+  kind:
+    image: kindest/node:v1.35.0@sha256:452d707d4862f52530247495d180205e029056831160e22870e37e3f6c1ac31f
+    networking:
+      disableDefaultCNI: true
+      podSubnet: 10.244.0.0/16
+    preloadImages:
+    - mccutchen/go-httpbin:2.25.0
+    - curlimages/curl:8.22.0
+bootstrap:
+  init:
+  - name: seed-environment
+    description: Install Cilium with Hubble and create the example workloads
+    type: file
+    source: bootstrap/setup.sh
+testing:
+  init:
+  - name: apply-solution
+    description: Apply the reference solution
+    type: file
+    source: solution/apply.sh
+validation:
+  scripts:
+  - name: ui-has-endpoints
+    description: "The hubble-ui Deployment is ready and the Service has a ready endpoint"
+    type: file
+    source: validation/validate-ui-has-endpoints.sh
+    hint: "Check the Deployment replicas and the Service selector against the pod labels."
+  - name: ui-answers
+    description: "The Hubble UI answers an HTTP request through the Service"
+    type: file
+    source: validation/validate-ui-answers.sh
+    hint: "Both faults sit in the Deployment and the Service."
+  - name: ui-report-correct
+    description: "ui-report lists the dropped edge and the namespaces of the map"
+    type: file
+    source: validation/validate-ui-report-correct.sh
+    hint: "Use the form source->destination and a comma-separated sorted namespace list."
+teardown:
+  keepCluster: false

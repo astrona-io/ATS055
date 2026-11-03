@@ -1,35 +1,11 @@
----
-draft: true
-exam_objectives:
-- Know How to Use Hubble from the Command Line or the Hubble UI
----
-# Discover The Relay Service For Hubble CLI
+# Question
 
-Verify the relay service and ready deployment.
+Solve this question on: `terminal`
 
-## Starting state
+The pod `rogue` in `outpost` keeps sending requests to the `probe` in `starfleet`. Something drops them, and nobody knows which pod is affected.
 
-Cilium manages the private two-node cluster. Hubble Relay and the BGP control plane are enabled. The probe and two clients are healthy; no learner policy or evidence report exists. This baseline uses kube-proxy and tunnelling.
+1. Use `hubble observe` to find the pod whose requests to the `probe` are dropped, the destination port and the verdict.
+2. Create the ConfigMap `cli-report` in `starfleet` with the keys `dropped-source` (namespace/pod), `destination` (namespace/pod), `destination-port` and `verdict`.
+3. Allow only that pod: extend `probe-ingress` so that the pod labelled `app=rogue` in `outpost` may reach port 8080. Keep `shuttle` allowed and keep `drifter` refused.
 
-Use a host shell with the private kubeconfig for this independent kind environment. A kubeconfig identifies the cluster and credentials used by kubectl, the Kubernetes command-line tool.
-
-```sh
-export KUBECONFIG="$(astrona kubeconfig ats-055-lab-030-01-01)"
-test "$(kubectl config current-context)" = "kind-astro-ats-055-lab-030-01-01" || exit 1
-node_name="astro-ats-055-lab-030-01-01-control-plane"
-worker_name="astro-ats-055-lab-030-01-01-worker"
-```
-
-Keep this connection selected. Host-level commands name only this environment's node containers. They do not operate on the host operating system.
-
-## Required result
-
-Locate Relay service and port as the CLI connection boundary. A UI offers presentation; it does not widen observation coverage.
-
-Record observations in `starfleet/evidence`, whose `report.json` contains the stated report. The verifier reads the live API again; invented values do not pass.
-
-The report object uses these fields: `image`, `service_ports`, `selector`. Keep numeric values numeric and preserve arrays and nested objects returned by the API.
-
-## Verify The Result
-
-The grader checks the required object fields and actual observations. Wait for controller convergence before submitting. Preserve the task's namespace, workload names and unrelated components.
+`kubectl` already points at the cluster as the cluster administrator.
