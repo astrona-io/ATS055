@@ -1,3 +1,9 @@
+<p align="center">
+  <a href="https://astrona.io/courses/cilium-certified-associate-cca">
+    <img src="https://astrona.io/courses/cilium-certified-associate-cca/domains/ATS055.svg" alt="ATS055: Network Observability, part of the Cilium Certified Associate course on Astrona" width="100%">
+  </a>
+</p>
+
 # Network Observability (ATS055)
 
 Cilium Certified Associate (CCA): Network Observability, worth 10% of the official curriculum. This course belongs to ATP011.
